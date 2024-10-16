@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Alert, Image, ScrollView, Text, View } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
 import ReactNativeModal from "react-native-modal";
+import { fetchAPI } from "@/lib/fetch";
 
 const SignUp = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -43,7 +44,7 @@ const SignUp = () => {
     } catch (err: any) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
-      Alert.alert("Error: ", err.errors[0].longMessage)
+      Alert.alert("Error: ", err.errors[0].longMessage);
     }
   };
 
@@ -58,7 +59,14 @@ const SignUp = () => {
       });
 
       if (completeSignUp.status === "complete") {
-        // Create a Database user!!
+        await fetchAPI("/(api)/user", {
+          method: "POST",
+          body: JSON.stringify({
+            name: form.name,
+            email: form.email,
+            clerkId: completeSignUp.createdUserId,
+          }),
+        });
         await setActive({ session: completeSignUp.createdSessionId });
         setVerification({
           ...verification,
@@ -129,7 +137,7 @@ const SignUp = () => {
         <ReactNativeModal
           isVisible={verification.state === "pending"}
           onModalHide={() => {
-            if(verification.state === 'success') setShowSuccessModal(true)
+            if (verification.state === "success") setShowSuccessModal(true);
           }}
         >
           <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
@@ -149,8 +157,16 @@ const SignUp = () => {
                 setVerification({ ...verification, code })
               }
             />
-            {verification.error && <Text className=" text-red-500 text-sm mt-1">{verification.error}</Text>}
-            <CustomButton title="Verify Email" onPress={onPressVerify} className="mt-5 bg-success-500" />
+            {verification.error && (
+              <Text className=" text-red-500 text-sm mt-1">
+                {verification.error}
+              </Text>
+            )}
+            <CustomButton
+              title="Verify Email"
+              onPress={onPressVerify}
+              className="mt-5 bg-success-500"
+            />
           </View>
         </ReactNativeModal>
         <ReactNativeModal isVisible={showSuccessModal}>
@@ -169,7 +185,7 @@ const SignUp = () => {
               title="Browse Home"
               onPress={() => {
                 setShowSuccessModal(false);
-                router.push("/(root)/(tabs)/home")
+                router.push("/(root)/(tabs)/home");
               }}
               className="mt-5"
             />

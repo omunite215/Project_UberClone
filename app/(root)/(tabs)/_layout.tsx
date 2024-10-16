@@ -1,6 +1,6 @@
 import { icons } from "@/constants";
 import { Tabs } from "expo-router";
-import { Image, ImageSourcePropType, View } from "react-native";
+import { Image, type ImageSourcePropType, View } from "react-native";
 
 const TabIcon = ({
   focused,
@@ -69,7 +69,7 @@ const Layout = () => (
       }}
     />
     <Tabs.Screen
-      name="chats"
+      name="chat"
       options={{
         title: "Chat",
         headerShown: false,
