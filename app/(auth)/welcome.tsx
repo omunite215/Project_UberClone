@@ -16,7 +16,7 @@ const OnBoarding = () => {
         onPress={() => {
           router.replace("/(auth)/sign-up");
         }}
-        className="w-full flex justify-end items-end p-5"
+        className="w-full flex justify-end items-end px-5"
       >
         <Text className="text-black text-md font-JakartaBold">Skip</Text>
       </TouchableOpacity>
@@ -25,7 +25,7 @@ const OnBoarding = () => {
         loop={false}
         dot={<View className="w-8 h-1 mx-1 bg-customWhite rounded-full" />}
         activeDot={
-          <View className="w-8 h-1 mx-1 bg-primary-800 rounded-full" />
+          <View className="w-8 h-1 mx-1 bg-primary-600 rounded-full" />
         }
         onIndexChanged={(index) => setActiveIndex(index)}
       >
@@ -54,7 +54,7 @@ const OnBoarding = () => {
             ? router.replace("/(auth)/sign-up")
             : swiperRef.current?.scrollBy(1)
         }
-        className="w-11/12 mt-10"
+        className="w-11/12 my-10"
       />
     </SafeAreaView>
   );

@@ -54,7 +54,7 @@ declare interface Ride {
 }
 
 declare interface ButtonProps extends TouchableOpacityProps {
-    title: string;
+    title?: string;
     bgVariant?: "primary" | "secondary" | "danger" | "outline" | "success";
     textVariant?: "primary" | "default" | "secondary" | "danger" | "success";
     IconLeft?: React.ComponentType<any>;
@@ -86,6 +86,7 @@ declare interface InputFieldProps extends TextInputProps {
     containerStyle?: string;
     inputStyle?: string;
     iconStyle?: string;
+    prefixText?: string;
     className?: string;
 }
 
