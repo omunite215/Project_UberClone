@@ -1,5 +1,6 @@
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import OAuth from "@/components/OAuth";
 import { icons, images } from "@/constants";
 import { Link, router } from "expo-router";
@@ -16,9 +17,11 @@ import { useSignUp } from "@clerk/clerk-expo";
 import ReactNativeModal from "react-native-modal";
 import { fetchAPI } from "@/lib/fetch";
 
+
 const SignUp = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -42,14 +45,16 @@ const SignUp = () => {
       await signUp.create({
         emailAddress: form.email,
         password: form.password,
+        phoneNumber: form.phone
       });
 
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      await signUp.preparePhoneNumberVerification({strategy: "phone_code"});
 
       setVerification({
         ...verification,
         state: "pending",
       });
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     } catch (err: any) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
@@ -63,9 +68,9 @@ const SignUp = () => {
     }
 
     try {
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code: verification.code,
-      });
+      const completeSignUp = await signUp.attemptPhoneNumberVerification({
+        code: verification.code
+      })
 
       if (completeSignUp.status === "complete") {
         await fetchAPI("/(api)/user", {
@@ -90,6 +95,7 @@ const SignUp = () => {
           state: "failed",
         });
       }
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     } catch (err: any) {
       setVerification({
         ...verification,
@@ -133,7 +139,7 @@ const SignUp = () => {
               icon={icons.lock}
               secureTextEntry={true}
               value={form.password}
-              onChangeText={(value) => setForm({ ...form, password: value })}
+              onChangeText={(value) => setForm({ ...form, password: `+91 ${value}` })}
             />
             <InputField
               label="Phone"
@@ -152,6 +158,19 @@ const SignUp = () => {
                 setForm({ ...form, adhaarCardNo: value })
               }
             />
+            <View className="flex flex-row my-2">
+              <BouncyCheckbox
+                isChecked={acceptTerms}
+                useBuiltInState={false}
+                size={20}
+                fillColor="#00BDA5"
+                onPress={() => setAcceptTerms(true)}
+              />
+              <Link href="/(root)/policies" className="">
+                <Text className="text-white text-[15px]">By Signing Up you agree to the </Text>
+                <Text className="text-primary-600 text-[15px] font-JakartaSemiBold">Privacy Policies and Terms & Conditions</Text>
+              </Link>
+            </View>
             <CustomButton
               title="Sign Up"
               onPress={onSignUpPress}
