@@ -1,41 +1,37 @@
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  Text,
-  SectionList,
-} from "react-native";
+import { View, Text, SectionList } from "react-native";
 import { termsAndConditionsData } from "@/constants/termsAndConditionsData";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
 const Policies = () => {
   return (
-    <SafeAreaView className="flex-1">
-      <Text className="px-4 py-3 text-3xl font-JakartaBold text-primary-600">
-        Terms and Conditions*
-      </Text>
-      <SectionList
-        sections={termsAndConditionsData.map((section) => ({
-          title: section.section,
-          data: section.terms,
-        }))}
-        keyExtractor={(item) => item.title}
-        renderSectionHeader={({ section }) => (
-          <View className="py-3 bg-white">
-            <Text className="text-primary-600 px-5 font-JakartaBold text-2xl">
+    <SafeAreaProvider>
+      <SafeAreaView className="flex-1" edges={["top"]}>
+        <Text className="m-4 text-2xl font-JakartaBold text-primary-600">
+          Terms and Policies*
+        </Text>
+        <SectionList
+          stickySectionHeadersEnabled={false}
+          sections={termsAndConditionsData.map((section) => ({
+            title: section.section,
+            data: section.terms,
+          }))}
+          keyExtractor={(item) => item.title}
+          renderItem={({ item, index }) => (
+            <View className="py-3 px-5">
+              <Text className="text-sm">
+                {index + 1}) {item.title}
+              </Text>
+              <Text className="text-xs">{item.description}</Text>
+            </View>
+          )}
+          renderSectionHeader={({ section }) => (
+            <Text className="text-primary-600 py-3 underline px-5 font-JakartaBold text-base">
               {section.title}
             </Text>
-          </View>
-        )}
-        renderItem={({ item, index }) => (
-          <View className="bg-white space-y-2 py-3 px-5">
-            <Text className="text-base">
-              {index + 1}) {item.title}
-            </Text>
-            <Text className="text-sm">{item.description}</Text>
-          </View>
-        )}
-      />
-    </SafeAreaView>
+          )}
+        />
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 export default Policies;

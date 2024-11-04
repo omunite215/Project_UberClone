@@ -3,7 +3,7 @@ import DriverCard from "@/components/DriverCard";
 import RideLayout from "@/components/RideLayout";
 import { useDriverStore } from "@/store";
 import { router } from "expo-router";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, View } from "react-native";
 
 
 const ConfirmRide = () => {
@@ -15,6 +15,7 @@ const ConfirmRide = () => {
         renderItem={({ item }) => (
           <DriverCard
             item={item}
+            // biome-ignore lint/style/noNonNullAssertion: API CALL
             selected={selectedDriver!}
             setSelected={() => setSelectedDriver(Number(item.id))}
           />

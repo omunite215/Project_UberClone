@@ -81,6 +81,21 @@ declare interface GoogleInputProps {
 declare interface InputFieldProps extends TextInputProps {
     label: string;
     icon?: any;
+    errors: any;
+    secureTextEntry?: boolean;
+    labelStyle?: string;
+    containerStyle?: string;
+    inputStyle?: string;
+    iconStyle?: string;
+    prefixText?: string;
+    className?: string;
+    control: any;
+    name: string;
+}
+
+declare interface OTPFieldProps extends TextInputProps {
+    label: string;
+    icon?: any;
     secureTextEntry?: boolean;
     labelStyle?: string;
     containerStyle?: string;

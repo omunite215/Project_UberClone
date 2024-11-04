@@ -19,6 +19,7 @@ const BookRide = () => {
 
   return (
     <StripeProvider
+      // biome-ignore lint/style/noNonNullAssertion: API KEY
       publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
       merchantIdentifier="merchant.uber.com"
       urlScheme="myapp"
@@ -64,7 +65,12 @@ const BookRide = () => {
             <View className="flex flex-row items-center justify-between w-full border-b border-white py-3">
               <Text className="text-lg font-JakartaRegular">Pickup Time</Text>
               <Text className="text-lg font-JakartaRegular">
-                {formatTime(Number.parseInt(`${driverDetails?.time!}`))}
+                {formatTime(
+                  Number.parseInt(
+                    `${// biome-ignore lint/style/noNonNullAssertion: API KEY
+                    driverDetails?.time!}`
+                  )
+                )}
               </Text>
             </View>
 
@@ -92,10 +98,14 @@ const BookRide = () => {
             </View>
           </View>
           <Payment
+            // biome-ignore lint/style/noNonNullAssertion: API KEY
             fullName={user?.fullName!}
+            // biome-ignore lint/style/noNonNullAssertion: API KEY
             email={user?.emailAddresses[0].emailAddress!}
-            amount={driverDetails?.price}
-            driveId={driverDetails?.id}
+            // biome-ignore lint/style/noNonNullAssertion: API KEY
+            amount={driverDetails?.price!}
+            driverId={driverDetails?.id}
+            // biome-ignore lint/style/noNonNullAssertion: API KEY
             rideTime={driverDetails?.time!}
           />
         </>

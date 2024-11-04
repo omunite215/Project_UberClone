@@ -25,7 +25,7 @@ const OnBoarding = () => {
         loop={false}
         dot={<View className="w-8 h-1 mx-1 bg-customWhite rounded-full" />}
         activeDot={
-          <View className="w-8 h-1 mx-1 bg-primary-600 rounded-full" />
+          <View className="w-8 h-1 mx-1 bg-primary-500 rounded-full" />
         }
         onIndexChanged={(index) => setActiveIndex(index)}
       >
@@ -37,7 +37,7 @@ const OnBoarding = () => {
               resizeMode="contain"
             />
             <View className="flex flex-row items-center justify-center w-full mt-10">
-              <Text className=" text-customBlack-200 text-3xl font-bold mx-10 text-center">
+              <Text className="text-3xl font-bold mx-10 text-center">
                 {item.title}
               </Text>
             </View>

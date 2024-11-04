@@ -7,6 +7,7 @@ import { LogBox } from "react-native";
 import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
 import { tokenCache } from "@/lib/auth";
 
+// biome-ignore lint/style/noNonNullAssertion: API KEY
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
 

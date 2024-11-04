@@ -1,5 +1,6 @@
 import { Stripe } from "stripe";
 
+// biome-ignore lint/style/noNonNullAssertion: API KEYS
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(request: Request) {

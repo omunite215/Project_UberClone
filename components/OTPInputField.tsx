@@ -1,4 +1,4 @@
-import type { InputFieldProps } from "@/types/type";
+import type { OTPFieldProps } from "@/types/type";
 import {
   Image,
   Keyboard,
@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 
-const InputField = ({
+const OTPInputField = ({
   label,
   labelStyle,
   icon,
@@ -22,7 +22,8 @@ const InputField = ({
   className,
   keyboardType = "default",
   ...props
-}: InputFieldProps) => {
+}: OTPFieldProps) => {
+
   const inputMaxLength =
     (label === "Aadhaar Card Number"
       ? 12
@@ -41,19 +42,13 @@ const InputField = ({
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="my-2 w-full">
-          <Text
-            className={`text-lg text-white font-JakartaSemiBold mb-3 ${labelStyle}`}
-          >
+          <Text className={`text-lg text-white font-JakartaSemiBold mb-3 ${labelStyle}`}>
             {label}
           </Text>
           <View
             className={`flex flex-row justify-start items-center relative bg-neutral-100 rounded-md border border-neutral-100 focus:border-primary-500 ${containerStyle}`}
           >
-            <Image
-              source={icon}
-              className={`h-6 w-6 ml-4 ${iconStyle}`}
-              resizeMode="contain"
-            />
+            <Image source={icon} className={`h-6 w-6 ml-4 ${iconStyle}`} resizeMode="contain" />
             {prefixText && (
               <Text className="rounded-full p-4 font-JakartaSemiBold text-[15px]">
                 {prefixText}
@@ -73,4 +68,4 @@ const InputField = ({
   );
 };
 
-export default InputField;
+export default OTPInputField;

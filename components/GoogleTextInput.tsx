@@ -49,7 +49,9 @@ const GoogleTextInput = ({
         }}
         onPress={(data, details = null) => {
           handlePress({
+            // biome-ignore lint/style/noNonNullAssertion: API CALL
             latitude: details?.geometry.location.lat!,
+            // biome-ignore lint/style/noNonNullAssertion: API CALL
             longitude: details?.geometry.location.lng!,
             address: data.description,
           });

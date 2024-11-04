@@ -1,16 +1,18 @@
 import type { InputFieldProps } from "@/types/type";
+import { Controller } from "react-hook-form";
 import {
   Image,
   Keyboard,
-  KeyboardAvoidingView,
-  Platform,
   Text,
   TextInput,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
 
-const InputField = ({
+const CustomFormField = ({
+  control,
+  name,
+  errors,
   label,
   labelStyle,
   icon,
@@ -31,14 +33,12 @@ const InputField = ({
         : undefined) || 50;
 
   const inputKeyboardType =
-    label === "Phone" || label === "Aadhaar Card Number"
+    label === "Phone" || label === "Adhaar Card Number"
       ? "number-pad"
       : keyboardType;
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
+    <>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="my-2 w-full">
           <Text
@@ -59,18 +59,27 @@ const InputField = ({
                 {prefixText}
               </Text>
             )}
-            <TextInput
-              className={`rounded-full p-4 font-JakartaSemiBold text-[15px] flex-1 ${inputStyle} text-left`}
-              secureTextEntry={secureTextEntry}
-              maxLength={inputMaxLength}
-              keyboardType={inputKeyboardType}
-              {...props}
+            <Controller
+              control={control}
+              name={name}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  className={`rounded-full p-4 font-JakartaSemiBold text-[15px] flex-1 ${inputStyle} text-left`}
+                  secureTextEntry={secureTextEntry}
+                  maxLength={inputMaxLength}
+                  keyboardType={inputKeyboardType}
+                  onChangeText={onChange}
+                  value={value}
+                  {...props}
+                />
+              )}
             />
           </View>
+            {errors.name && <Text className="my-1.5 text-danger-600 font-JakartaMedium">{errors.name.message}</Text>}
         </View>
       </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    </>
   );
 };
 
-export default InputField;
+export default CustomFormField;

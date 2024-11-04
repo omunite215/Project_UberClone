@@ -4,7 +4,7 @@ export async function POST(request: Request) {
   try {
     const sql = neon(`${process.env.DATABASE_URL}`);
     const { name, email, phone, adhaarId, clerkId } = await request.json();
-    
+
     if (!name || !email || !clerkId || !phone || !adhaarId) {
       Response.json({ error: "Missing Required Fields" }, { status: 400 });
     }
@@ -27,6 +27,6 @@ export async function POST(request: Request) {
     return new Response(JSON.stringify({ data: response }), { status: 201 });
   } catch (error) {
     console.error(error);
-    return Response.json({error: error},{status: 500});
+    return Response.json({ error: error }, { status: 500 });
   }
 }

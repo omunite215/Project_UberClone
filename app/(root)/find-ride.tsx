@@ -19,6 +19,7 @@ const FindRide = () => {
         <Text className="text-lg font-JakartaBold mb-3">From</Text>
         <GoogleTextInput
           icon={icons.target}
+          // biome-ignore lint/style/noNonNullAssertion: API CALL
           initialLocation={userAddress!}
           containerStyle="bg-neutral-100"
           textInputBackgroundColor="#f5f5f5"
@@ -29,6 +30,7 @@ const FindRide = () => {
         <Text className="text-lg font-JakartaBold mb-3">To</Text>
         <GoogleTextInput
           icon={icons.map}
+          // biome-ignore lint/style/noNonNullAssertion: API CALL
           initialLocation={destinationAddress!}
           containerStyle="bg-neutral-100"
           textInputBackgroundColor="transparent"

@@ -8,11 +8,11 @@ const getBgVariantStyle = (variant: ButtonProps["bgVariant"]) => {
     case "danger":
       return "bg-red-500";
     case "success":
-      return "bg-green-500";
+      return "bg-green-200";
     case "outline":
       return "bg-transparent border-neutral-300 border-[0.5px]";
     default:
-      return "bg-primary-600";
+      return "bg-primary-500";
   }
 };
 
@@ -47,7 +47,9 @@ const CustomButton = ({
     {...props}
   >
     {IconLeft && <IconLeft />}
-    <Text className={`text-lg font-bold ${getTextVariantStyle(textVariant)}`}>{title}</Text>
+    <Text className={`text-lg font-bold ${getTextVariantStyle(textVariant)}`}>
+      {title}
+    </Text>
     {IconRight && <IconRight />}
   </TouchableOpacity>
 );

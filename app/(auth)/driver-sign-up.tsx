@@ -81,7 +81,7 @@ const SignUp = () => {
       });
       const { name, email, adhaarCardNo, phone } = getValues();
       if (completeSignUp.status === "complete") {
-        await fetchAPI("/(api)/user", {
+        await fetchAPI("/(api)/driver", {
           method: "POST",
           body: JSON.stringify({
             name: name,
@@ -131,7 +131,7 @@ const SignUp = () => {
           <View className="flex-1 bg-black/50 w-full px-5">
             <View className="relative w-full h-[130px]">
               <Text className="text-2xl text-white font-JakartaSemiBold absolute bottom-0 mt-6 left-0">
-                Create Your Account
+                Hey Sarthi!! Create Your Account
               </Text>
             </View>
             <View className="py-5">

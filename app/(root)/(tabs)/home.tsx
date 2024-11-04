@@ -1,5 +1,6 @@
 import GoogleTextInput from "@/components/GoogleTextInput";
 import * as Location from "expo-location";
+// biome-ignore lint/suspicious/noShadowRestrictedNames: REQUIRED
 import Map from "@/components/Map";
 import RideCard from "@/components/RideCard";
 import { icons, images } from "@/constants";
@@ -21,14 +22,14 @@ import { useFetch } from "@/lib/fetch";
 const Home = () => {
   const { setUserLocation, setDestinationLocation } = useLocationStore();
   const { user } = useUser();
-  const {signOut} = useAuth();
-  const {data: recentRides, loading} = useFetch(`/(api)/ride/${user?.id}`);
+  const { signOut } = useAuth();
+  const { data: recentRides, loading } = useFetch(`/(api)/ride/${user?.id}`);
 
   const [hasPremissions, setHasPermissions] = useState(false);
 
   const handleSignout = () => {
     signOut();
-    router.replace("/(auth)/sign-in")
+    router.replace("/(auth)/sign-in");
   };
   const handleDestinationPress = (location: {
     latitude: number;
@@ -48,7 +49,9 @@ const Home = () => {
       }
       const location = await Location.getCurrentPositionAsync();
       const address = await Location.reverseGeocodeAsync({
+        // biome-ignore lint/style/noNonNullAssertion: GEOLOCATION API
         latitude: location.coords?.longitude!,
+        // biome-ignore lint/style/noNonNullAssertion: GEOLOCATION API
         longitude: location.coords?.latitude!,
       });
       setUserLocation({
@@ -58,7 +61,7 @@ const Home = () => {
       });
     };
     requestLocation();
-  }, []);
+  }, [setUserLocation]);
 
   return (
     <SafeAreaView className=" bg-general-500">

@@ -22,33 +22,30 @@ const SignIn = () => {
     resolver: zodResolver(SignInFormSchema),
   });
 
-  const onSignInPress = useCallback(
-    async (values: z.infer<typeof SignInFormSchema>) => {
-      if (!isLoaded) {
-        return;
-      }
+  const onSignInPress = useCallback(async (values: z.infer<typeof SignInFormSchema>) => {
+    if (!isLoaded) {
+      return;
+    }
 
-      try {
-        const signInAttempt = await signIn.create({
-          identifier: values.email,
-          password: values.password,
-        });
+    try {
+      const signInAttempt = await signIn.create({
+        identifier: values.email,
+        password: values.password,
+      });
 
-        if (signInAttempt.status === "complete") {
-          await setActive({ session: signInAttempt.createdSessionId });
-          router.replace("/");
-        } else {
-          // See https://clerk.com/docs/custom-flows/error-handling
-          // for more info on error handling
-          console.error(JSON.stringify(signInAttempt, null, 2));
-        }
-        // biome-ignore lint/suspicious/noExplicitAny: CUSTOMIZED ERROR
-      } catch (err: any) {
-        console.error(JSON.stringify(err, null, 2));
+      if (signInAttempt.status === "complete") {
+        await setActive({ session: signInAttempt.createdSessionId });
+        router.replace("/driver/home");
+      } else {
+        // See https://clerk.com/docs/custom-flows/error-handling
+        // for more info on error handling
+        console.error(JSON.stringify(signInAttempt, null, 2));
       }
-    },
-    [isLoaded, setActive, signIn, router]
-  );
+      // biome-ignore lint/suspicious/noExplicitAny: CUSTOMIZED ERROR
+    } catch (err: any) {
+      console.error(JSON.stringify(err, null, 2));
+    }
+  }, [isLoaded, setActive, signIn, router]);
 
   return (
     <ScrollView className="flex-1 bg-white">
@@ -85,7 +82,7 @@ const SignIn = () => {
         />
         <OAuth />
         <Link
-          href="/(auth)/sign-up"
+          href="/(auth)/driver-sign-up"
           className="text-lg text-center text-customBlack-100 mt-10"
         >
           <Text>Don't have an account? </Text>
