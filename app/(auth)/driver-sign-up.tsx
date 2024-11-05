@@ -8,27 +8,25 @@ import { SignUpFormSchema } from "@/lib/validationSchemas";
 import { useSignUp } from "@clerk/clerk-expo";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, router } from "expo-router";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Alert,
+  Image,
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   Text,
   View,
-  Image,
 } from "react-native";
-import BouncyCheckbox, {
-  type BouncyCheckboxHandle,
-} from "react-native-bouncy-checkbox";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import ReactNativeModal from "react-native-modal";
 import type { z } from "zod";
 
-const SignUp = () => {
-  const bouncyCheckboxRef = useRef<BouncyCheckboxHandle>(null);
+const DriverSignUp = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
+  const [isChecked, setIsChecked] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const {
     control,
@@ -59,7 +57,7 @@ const SignUp = () => {
         phoneNumber: phone,
       });
 
-      await signUp.preparePhoneNumberVerification({ strategy: "phone_code" });
+      await signUp.preparePhoneNumberVerification();
 
       setVerification({
         ...verification,
@@ -81,7 +79,7 @@ const SignUp = () => {
       });
       const { name, email, adhaarCardNo, phone } = getValues();
       if (completeSignUp.status === "complete") {
-        await fetchAPI("/(api)/driver", {
+        await fetchAPI("/(api)/user", {
           method: "POST",
           body: JSON.stringify({
             name: name,
@@ -131,7 +129,7 @@ const SignUp = () => {
           <View className="flex-1 bg-black/50 w-full px-5">
             <View className="relative w-full h-[130px]">
               <Text className="text-2xl text-white font-JakartaSemiBold absolute bottom-0 mt-6 left-0">
-                Hey Sarthi!! Create Your Account
+                Create Your Account
               </Text>
             </View>
             <View className="py-5">
@@ -177,14 +175,17 @@ const SignUp = () => {
                 placeholder="Enter your Adhaar Card Number"
                 icon={icons.adhaar}
               />
-              <View className="flex flex-row my-2">
+              <View className="flex flex-row items-center justify-start gap-x-6 my-2">
                 <BouncyCheckbox
-                  ref={bouncyCheckboxRef}
-                  isChecked={getValues("acceptTerms")}
+                  isChecked={isChecked}
+                  disableText
+                  fillColor="#0ad1c8"
                   useBuiltInState={false}
-                  size={20}
-                  fillColor="#00BDA5"
-                  onPress={() => setValue("acceptTerms", true)}
+                  size={24}
+                  onPress={() => {
+                    setIsChecked(!isChecked);
+                    setValue("acceptTerms", isChecked);
+                  }}
                 />
                 <Link href="/(root)/policies" className="pr-6">
                   <Text className="text-white text-[15px]">
@@ -206,7 +207,7 @@ const SignUp = () => {
                 className="text-lg text-center text-customBlack-100 my-10"
               >
                 <Text>Already have an account? </Text>
-                <Text className=" text-primary-600">Log In</Text>
+                <Text className=" text-primary-300">Log In</Text>
               </Link>
             </View>
             <ReactNativeModal
@@ -273,4 +274,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default DriverSignUp;

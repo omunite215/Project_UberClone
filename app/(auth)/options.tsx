@@ -1,19 +1,31 @@
 import CustomButton from "@/components/CustomButton";
-import { Link } from "expo-router";
+import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 const Options = () => {
   return (
-    <SafeAreaView className="flex h-full items-center justify-between bg-white">
-      <Text>Welcome to Sarthi</Text>
-      <Text>Please choose relevant option from below:</Text>
-      <Link href="/(auth)/sign-up">
-        <CustomButton title="I am Rider" />
-      </Link>
-      <Link href="/(auth)/driver-sign-up">
-        <CustomButton title="I am Driver" bgVariant="outline" />
-      </Link>
+    <SafeAreaView className="h-full bg-primary-500 space-y-12">
+      <View className="space-y-3 p-5">
+        <Text className="text-white font-JakartaBold text-3xl">
+          Welcome to Sarthi
+        </Text>
+        <Text className="text-white font-JakartaMedium text-lg">
+          Please choose relevant option from below:
+        </Text>
+      </View>
+      <View className="space-y-3 px-5 w-full">
+        <CustomButton
+          title="I am Rider"
+          className="min-w-full bg-primary-200"
+          onPress={() => router.replace("/(auth)/sign-up")}
+        />
+        <CustomButton
+          title="I am Driver"
+          className="min-w-full bg-primary-300"
+          onPress={() => router.replace("/(auth)/driver-sign-up")}
+        />
+      </View>
     </SafeAreaView>
   );
 };

@@ -8,27 +8,26 @@ import { SignUpFormSchema } from "@/lib/validationSchemas";
 import { useSignUp } from "@clerk/clerk-expo";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, router } from "expo-router";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Alert,
+  Image,
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   Text,
   View,
-  Image,
 } from "react-native";
-import BouncyCheckbox, {
-  type BouncyCheckboxHandle,
-} from "react-native-bouncy-checkbox";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import ReactNativeModal from "react-native-modal";
 import type { z } from "zod";
 
 const SignUp = () => {
-  const bouncyCheckboxRef = useRef<BouncyCheckboxHandle>(null);
   const { isLoaded, signUp, setActive } = useSignUp();
+  const [isChecked, setIsChecked] = useState(false);
+  const [disableSubmit, setDisableSubmit] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const {
     control,
@@ -47,7 +46,8 @@ const SignUp = () => {
   });
 
   const onSignUpPress = async (values: z.infer<typeof SignUpFormSchema>) => {
-    const phone = `+91 ${values.phone}`;
+    console.log(values);
+    setDisableSubmit(true);
     if (!isLoaded) {
       return;
     }
@@ -56,10 +56,9 @@ const SignUp = () => {
       await signUp.create({
         emailAddress: values.email,
         password: values.password,
-        phoneNumber: phone,
       });
 
-      await signUp.preparePhoneNumberVerification({ strategy: "phone_code" });
+      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
 
       setVerification({
         ...verification,
@@ -76,10 +75,11 @@ const SignUp = () => {
       return;
     }
     try {
-      const completeSignUp = await signUp.attemptPhoneNumberVerification({
+      const { name, email, adhaarCardNo, phone } = getValues();
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
         code: verification.code,
       });
-      const { name, email, adhaarCardNo, phone } = getValues();
+      console.log(completeSignUp.status);
       if (completeSignUp.status === "complete") {
         await fetchAPI("/(api)/user", {
           method: "POST",
@@ -92,10 +92,12 @@ const SignUp = () => {
           }),
         });
         await setActive({ session: completeSignUp.createdSessionId });
+
         setVerification({
           ...verification,
           state: "success",
         });
+        console.log("Step-1");
       } else {
         setVerification({
           ...verification,
@@ -110,6 +112,7 @@ const SignUp = () => {
         error: err?.errors[0]?.longMessage || "Oops!! An Error Occured!!",
         state: "failed",
       });
+      console.log("Step-3");
     }
   };
 
@@ -177,14 +180,17 @@ const SignUp = () => {
                 placeholder="Enter your Adhaar Card Number"
                 icon={icons.adhaar}
               />
-              <View className="flex flex-row my-2">
+              <View className="flex flex-row items-center justify-start gap-x-6 my-2">
                 <BouncyCheckbox
-                  ref={bouncyCheckboxRef}
-                  isChecked={getValues("acceptTerms")}
+                  isChecked={isChecked}
+                  disableText
+                  fillColor="#0ad1c8"
                   useBuiltInState={false}
-                  size={20}
-                  fillColor="#00BDA5"
-                  onPress={() => setValue("acceptTerms", true)}
+                  size={24}
+                  onPress={() => {
+                    setIsChecked(!isChecked);
+                    setValue("acceptTerms", !isChecked);
+                  }}
                 />
                 <Link href="/(root)/policies" className="pr-6">
                   <Text className="text-white text-[15px]">
@@ -196,6 +202,7 @@ const SignUp = () => {
                 </Link>
               </View>
               <CustomButton
+                disabled={disableSubmit}
                 title="Sign Up"
                 onPress={handleSubmit(onSignUpPress)}
                 className="mt-6"
@@ -206,7 +213,7 @@ const SignUp = () => {
                 className="text-lg text-center text-customBlack-100 my-10"
               >
                 <Text>Already have an account? </Text>
-                <Text className=" text-primary-600">Log In</Text>
+                <Text className=" text-primary-300">Log In</Text>
               </Link>
             </View>
             <ReactNativeModal

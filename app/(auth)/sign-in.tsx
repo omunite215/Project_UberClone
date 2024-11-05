@@ -1,10 +1,17 @@
 import { useSignIn } from "@clerk/clerk-expo";
 import CustomButton from "@/components/CustomButton";
 import OAuth from "@/components/OAuth";
-import { icons, images } from "@/constants";
+import { icons } from "@/constants";
 import { Link, useRouter } from "expo-router";
 import { useCallback } from "react";
-import { Image, ScrollView, Text, View } from "react-native";
+import {
+  ScrollView,
+  Text,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  ImageBackground,
+} from "react-native";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { SignInFormSchema } from "@/lib/validationSchemas";
@@ -51,48 +58,57 @@ const SignIn = () => {
   );
 
   return (
-    <ScrollView className="flex-1 bg-white">
-      <View className="flex-1 bg-white">
-        <View className="relative w-full h-[250px]">
-          <Image source={images.signUpCar} className="z-0 w-full h-[250px]" />
-          <Text className="text-2xl text-customBlack-200 font-JakartaSemiBold absolute bottom-5 left-5">
-            Welcome Back!!
-          </Text>
-        </View>
-      </View>
-      <View className="p-5">
-        <CustomFormField
-          control={control}
-          errors={errors}
-          label="Email"
-          name="email"
-          placeholder="Enter your Email"
-          icon={icons.email}
-        />
-        <CustomFormField
-          control={control}
-          errors={errors}
-          label="Password"
-          name="password"
-          placeholder="Enter your Password"
-          icon={icons.lock}
-          secureTextEntry={true}
-        />
-        <CustomButton
-          title="Sign In"
-          onPress={handleSubmit(onSignInPress)}
-          className="mt-6"
-        />
-        <OAuth />
-        <Link
-          href="/(auth)/sign-up"
-          className="text-lg text-center text-customBlack-100 mt-10"
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      className="flex-1"
+      enabled
+    >
+      <ScrollView className="flex-1 bg-white">
+        <ImageBackground
+          source={require("@/assets/images/signup-car.png")}
+          resizeMode="cover"
+          className=" h-full w-full justify-center items-center opacity-80"
         >
-          <Text>Don't have an account? </Text>
-          <Text className=" text-primary-500">Sign Up</Text>
-        </Link>
-      </View>
-    </ScrollView>
+          <View className="flex-1 bg-black/50 w-full px-5">
+            <View className="relative w-full h-[130px]">
+              <Text className="text-2xl text-white font-JakartaSemiBold absolute bottom-0 mt-6 left-0">
+                Welcome Back!!
+              </Text>
+            </View>
+            <CustomFormField
+              control={control}
+              errors={errors}
+              label="Email"
+              name="email"
+              placeholder="Enter your Email"
+              icon={icons.email}
+            />
+            <CustomFormField
+              control={control}
+              errors={errors}
+              label="Password"
+              name="password"
+              placeholder="Enter your Password"
+              icon={icons.lock}
+              secureTextEntry={true}
+            />
+            <CustomButton
+              title="Sign In"
+              onPress={handleSubmit(onSignInPress)}
+              className="mt-6"
+            />
+            <OAuth />
+            <Link
+              href="/(auth)/sign-up"
+              className="text-lg text-center text-customBlack-100 mt-10"
+            >
+              <Text>Don't have an account? </Text>
+              <Text className=" text-primary-300">Sign Up</Text>
+            </Link>
+          </View>
+        </ImageBackground>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

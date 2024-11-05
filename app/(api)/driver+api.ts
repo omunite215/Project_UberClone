@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     if (!name || !email || !clerkId || !phone || !adhaarId) {
       Response.json({ error: "Missing Required Fields" }, { status: 400 });
     }
-    const response = await sql`INSERT INTO users(
+    const response = await sql`INSERT INTO drivers(
     name,
     email,
     phone,

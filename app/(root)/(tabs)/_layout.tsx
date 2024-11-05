@@ -10,16 +10,16 @@ const TabIcon = ({
   source: ImageSourcePropType;
 }) => (
   <View
-    className={`flex flex-row justify-center items-center rounded-full ${focused ? "bg-general-300" : ""}`}
+    className={`flex flex-row font-JakartaBold justify-center items-center rounded-full ${focused ? "bg-general-300" : ""}`}
   >
     <View
-      className={`rounded-full w-12 h-12 items-center justify-center ${focused ? "bg-primary-600" : ""}`}
+      className={` rounded-full mt-3 py-1 w-14 h-14 items-center justify-start ${focused ? "bg-primary-400" : ""}`}
     >
       <Image
         source={source}
         tintColor="white"
         resizeMode="contain"
-        className="w-7 h-7"
+        className="w-6 h-6"
       />
     </View>
   </View>
@@ -32,7 +32,12 @@ const Layout = () => (
       tabBarActiveTintColor: "white",
       tabBarInactiveTintColor: "white",
       tabBarShowLabel: true,
+      tabBarLabelStyle: {
+        top: 10,
+        fontWeight: 800,
+      },
       tabBarStyle: {
+        marginTop: 12,
         backgroundColor: "#333333",
         borderRadius: 50,
         paddingBottom: 0,
