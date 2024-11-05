@@ -1,4 +1,4 @@
-import { Driver, MarkerData } from "@/types/type";
+import type { Driver, MarkerData } from "@/types/type";
 
 const directionsAPI = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
 
@@ -109,6 +109,7 @@ export const calculateDriverTimes = async ({
         dataToDestination.routes[0].legs[0].duration.value; // Time in seconds
 
       const totalTime = (timeToUser + timeToDestination) / 60; // Total time in minutes
+      
       const price = (totalTime * 0.5).toFixed(2); // Calculate price based on time
 
       return { ...marker, time: totalTime, price };

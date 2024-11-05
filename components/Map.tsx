@@ -56,7 +56,7 @@ const Map = () => {
         setDrivers(drivers as MarkerData[]);
       });
     }
-  }, [markers, destinationLatitude, destinationLongitude]);
+  }, [markers, destinationLatitude, destinationLongitude, userLongitude, userLatitude, setDrivers]);
 
   if (loading || !userLatitude || !userLongitude) {
     return (
@@ -78,7 +78,6 @@ const Map = () => {
     <MapView
       provider={PROVIDER_DEFAULT}
       className="w-full h-full rounded-2xl"
-      tintColor="black"
       mapType="mutedStandard"
       showsPointsOfInterest={false}
       showsUserLocation={true}
@@ -110,15 +109,18 @@ const Map = () => {
           />
           <MapViewDirections
             origin={{
+              // biome-ignore lint/style/noNonNullAssertion: <explanation>
               latitude: userLatitude!,
+              // biome-ignore lint/style/noNonNullAssertion: <explanation>
               longitude: userLongitude!,
             }}
             destination={{
               latitude: destinationLatitude,
               longitude: destinationLongitude,
             }}
-            apikey={process.env.EXPO_PUBLIC_GOOGLE_API_KEY}
-            strokeColor="#00BDA5"
+            // biome-ignore lint/style/noNonNullAssertion: <explanation>
+            apikey={process.env.EXPO_PUBLIC_GOOGLE_API_KEY!}
+            strokeColor="#0B6477"
             strokeWidth={4}
           />
         </>

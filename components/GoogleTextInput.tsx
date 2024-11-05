@@ -61,12 +61,13 @@ const GoogleTextInput = ({
           language: "en",
         }}
         renderLeftButton={() => (
-          <View className=" justify-center items-center w-6 h-6">
+          <View className="flex flex-row gap-x-2 justify-center items-center">
             <Image
               source={icon ? icon : icons.search}
               className="w-6 h-6"
               resizeMode="contain"
             />
+            <View className="h-2 w-2 bg-primary-200 rounded-full" />
           </View>
         )}
         textInputProps={{

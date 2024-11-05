@@ -68,7 +68,6 @@ const Home = () => {
       <FlatList
         data={recentRides?.slice(0, 5)}
         renderItem={({ item }) => <RideCard ride={item} />}
-        className="px-5"
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
           paddingBottom: 100,
@@ -86,47 +85,25 @@ const Home = () => {
                 <Text className="text-sm">No recent rides found</Text>
               </>
             ) : (
-              <ActivityIndicator size="small" color="#00B39C" />
+              <ActivityIndicator size="small" color="#0B6477" />
             )}
           </View>
         )}
         ListHeaderComponent={() => (
           <>
-            <View className="flex flex-row items-center justify-between my-5">
-              <Text className="text-2xl capitalize font-JakartaExtraBold">
-                Welcome,{" "}
-                {user?.firstName ||
-                  user?.emailAddresses[0].emailAddress.split("@")[0]}{" "}
-                👋
-              </Text>
-              <TouchableOpacity
-                className="justify-center items-center w-10 h-10 rounded-full bg-white"
-                onPress={handleSignout}
-              >
-                <Image
-                  source={icons.out}
-                  alt="logout"
-                  className="w-4 h-4"
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-            <GoogleTextInput
-              icon={icons.search}
-              containerStyle="bg-white shadow-md shadow-neutral-300"
-              handlePress={handleDestinationPress}
-            />
-            <>
-              <Text className="text-xl font-JakartaBold mt-5 mb-3">
-                Your Current Location
-              </Text>
-              <View className="flex flex-row items-center bg-transparent h-[300px]">
+            <View>
+              <View className="flex-1 flex flex-row items-center bg-transparent h-[500px] w-full">
                 <Map />
               </View>
-              <Text className="text-xl font-JakartaBold mt-5 mb-3">
-                Recent Rides
-              </Text>
-            </>
+              <GoogleTextInput
+                icon={icons.search}
+                containerStyle="bg-white shadow-md shadow-neutral-300 mt-4 mx-5"
+                handlePress={handleDestinationPress}
+              />
+            </View>
+            <Text className="text-xl font-JakartaBold mt-5 mb-3 px-5">
+              Recent Rides
+            </Text>
           </>
         )}
       />
