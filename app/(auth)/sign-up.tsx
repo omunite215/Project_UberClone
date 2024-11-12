@@ -1,6 +1,5 @@
 import CustomButton from "@/components/CustomButton";
 import CustomFormField from "@/components/CustomFormField";
-import OAuth from "@/components/OAuth";
 import OTPInputField from "@/components/OTPInputField";
 import { icons, images } from "@/constants";
 import { fetchAPI } from "@/lib/fetch";
@@ -133,7 +132,7 @@ const SignUp = () => {
         >
           <View className="flex-1 bg-black/50 w-full px-5">
             <View className="relative w-full h-[130px]">
-              <Text className="text-2xl text-white font-JakartaSemiBold absolute bottom-0 mt-6 left-0">
+              <Text className="text-3xl text-white font-JakartaBold absolute bottom-0 mt-6 left-0">
                 Create Your Account
               </Text>
             </View>
@@ -207,7 +206,7 @@ const SignUp = () => {
                 onPress={handleSubmit(onSignUpPress)}
                 className="mt-6"
               />
-              <OAuth />
+
               <Link
                 href="/(auth)/sign-in"
                 className="text-lg text-center text-customBlack-100 my-10"

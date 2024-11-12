@@ -58,20 +58,20 @@ const SignIn = () => {
   );
 
   return (
+    <ImageBackground
+      source={require("@/assets/images/signup-car.png")}
+      resizeMode="cover"
+      className=" h-full w-full opacity-80"
+    >
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1"
-      enabled
+      className="flex-1 bg-black/50"
+     
     >
-      <ScrollView className="flex-1 bg-white">
-        <ImageBackground
-          source={require("@/assets/images/signup-car.png")}
-          resizeMode="cover"
-          className=" h-full w-full justify-center items-center opacity-80"
-        >
-          <View className="flex-1 bg-black/50 w-full px-5">
+      <ScrollView className="flex-1 h-full">
+          <View className="flex-1 w-full px-5">
             <View className="relative w-full h-[130px]">
-              <Text className="text-2xl text-white font-JakartaSemiBold absolute bottom-0 mt-6 left-0">
+              <Text className="text-3xl text-white font-JakartaBold absolute bottom-0 my-6 left-0">
                 Welcome Back!!
               </Text>
             </View>
@@ -106,9 +106,9 @@ const SignIn = () => {
               <Text className=" text-primary-300">Sign Up</Text>
             </Link>
           </View>
-        </ImageBackground>
       </ScrollView>
     </KeyboardAvoidingView>
+        </ImageBackground>
   );
 };
 

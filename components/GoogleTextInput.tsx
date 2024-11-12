@@ -18,7 +18,7 @@ const GoogleTextInput = ({
     >
       <GooglePlacesAutocomplete
         fetchDetails={true}
-        placeholder="Where you want to go?"
+        placeholder="Search Destination"
         debounce={200}
         styles={{
           textInputContainer: {
@@ -61,18 +61,15 @@ const GoogleTextInput = ({
           language: "en",
         }}
         renderLeftButton={() => (
-          <View className="flex flex-row gap-x-2 justify-center items-center">
-            <Image
-              source={icon ? icon : icons.search}
-              className="w-6 h-6"
-              resizeMode="contain"
-            />
-            <View className="h-2 w-2 bg-primary-200 rounded-full" />
-          </View>
+          <Image
+            source={icon ? icon : icons.search}
+            className="w-6 h-6"
+            resizeMode="contain"
+          />
         )}
         textInputProps={{
           placeholderTextColor: "gray",
-          placeholder: initialLocation ?? "Where do you want to go?",
+          placeholder: initialLocation ?? "Search Destination",
         }}
       />
     </View>

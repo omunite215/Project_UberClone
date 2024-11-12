@@ -42,12 +42,12 @@ const CustomFormField = ({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="my-2 w-full">
           <Text
-            className={`text-lg text-white font-JakartaSemiBold mb-3 ${labelStyle}`}
+            className={`text-base text-white font-JakartaSemiBold mb-3 ${labelStyle}`}
           >
             {label}
           </Text>
           <View
-            className={`flex flex-row justify-start items-center relative bg-neutral-100 rounded-md border border-neutral-100 focus:border-primary-500 ${containerStyle}`}
+            className={`flex flex-row justify-start items-center relative bg-neutral-100 rounded-md border border-neutral-100 focus:border-primary-400 ${containerStyle}`}
           >
             <Image
               source={icon}

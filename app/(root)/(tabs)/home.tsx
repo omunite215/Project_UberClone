@@ -1,5 +1,6 @@
 import GoogleTextInput from "@/components/GoogleTextInput";
 import * as Location from "expo-location";
+import { StatusBar } from 'expo-status-bar';
 // biome-ignore lint/suspicious/noShadowRestrictedNames: REQUIRED
 import Map from "@/components/Map";
 import RideCard from "@/components/RideCard";
@@ -12,7 +13,6 @@ import {
   FlatList,
   Image,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -64,16 +64,17 @@ const Home = () => {
   }, [setUserLocation]);
 
   return (
-    <SafeAreaView className=" bg-general-500">
+    <View className=" bg-general-500 flex-1">
+      <StatusBar style="dark" translucent={true} />
       <FlatList
         data={recentRides?.slice(0, 5)}
         renderItem={({ item }) => <RideCard ride={item} />}
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
-          paddingBottom: 100,
+          paddingBottom: 0,
         }}
         ListEmptyComponent={() => (
-          <View className="flex flex-col items-center justify-center">
+          <View className="flex flex-col items-center justify-center py-12">
             {!loading ? (
               <>
                 <Image
@@ -91,7 +92,7 @@ const Home = () => {
         )}
         ListHeaderComponent={() => (
           <>
-            <View>
+            <Text className=" top-10 left-5 z-30">Enter Pickup</Text>
               <View className="flex-1 flex flex-row items-center bg-transparent h-[500px] w-full">
                 <Map />
               </View>
@@ -100,14 +101,13 @@ const Home = () => {
                 containerStyle="bg-white shadow-md shadow-neutral-300 mt-4 mx-5"
                 handlePress={handleDestinationPress}
               />
-            </View>
             <Text className="text-xl font-JakartaBold mt-5 mb-3 px-5">
               Recent Rides
             </Text>
           </>
         )}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -25,7 +25,7 @@ const OnBoarding = () => {
         loop={false}
         dot={<View className="w-8 h-1 mx-1 bg-customWhite rounded-full" />}
         activeDot={
-          <View className="w-8 h-1 mx-1 bg-primary-500 rounded-full" />
+          <View className="w-8 h-1 mx-1 bg-primary-300 rounded-full" />
         }
         onIndexChanged={(index) => setActiveIndex(index)}
       >
@@ -49,12 +49,13 @@ const OnBoarding = () => {
       </Swiper>
       <CustomButton
         title={isLastSlide ? "Get Started" : "Next"}
+        
         onPress={() =>
           isLastSlide
             ? router.replace("/(auth)/options")
             : swiperRef.current?.scrollBy(1)
         }
-        className="w-11/12 my-10"
+        className="bg-primary-300 w-11/12 my-10"
       />
     </SafeAreaView>
   );

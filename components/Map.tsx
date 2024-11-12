@@ -62,6 +62,7 @@ const Map = () => {
     return (
       <View className="flex justify-between items-center w-full">
         <ActivityIndicator size="small" color="#000" />
+        <Text className=" font-Jakarta text-sm mt-2">Bringing the Map 🌍</Text>
       </View>
     );
   }

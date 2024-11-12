@@ -12,7 +12,7 @@ const getBgVariantStyle = (variant: ButtonProps["bgVariant"]) => {
     case "outline":
       return "bg-transparent border-neutral-300 border-[0.5px]";
     default:
-      return "bg-primary-500";
+      return "bg-primary-400";
   }
 };
 
