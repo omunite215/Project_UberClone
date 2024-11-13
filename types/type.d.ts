@@ -63,6 +63,7 @@ declare interface ButtonProps extends TouchableOpacityProps {
 }
 
 declare interface GoogleInputProps {
+    purpose: "pickup" | "destination";
     icon?: string;
     initialLocation?: string;
     containerStyle?: string;

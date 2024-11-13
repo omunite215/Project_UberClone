@@ -1,6 +1,7 @@
 import { icons } from "@/constants";
 import type { GoogleInputProps } from "@/types/type";
-import { Image, Text, View } from "react-native";
+import { router } from "expo-router";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 const googlePlacesApiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
@@ -11,6 +12,7 @@ const GoogleTextInput = ({
   containerStyle,
   textInputBackgroundColor,
   handlePress,
+  purpose,
 }: GoogleInputProps) => {
   return (
     <View
@@ -18,7 +20,9 @@ const GoogleTextInput = ({
     >
       <GooglePlacesAutocomplete
         fetchDetails={true}
-        placeholder="Search Destination"
+        placeholder={
+          purpose === "destination" ? "Search Destination" : "Search Pickup"
+        }
         debounce={200}
         styles={{
           textInputContainer: {
@@ -27,7 +31,6 @@ const GoogleTextInput = ({
             borderRadius: 20,
             marginHorizontal: 20,
             position: "relative",
-            shadowColor: "#d4d4d4",
           },
           textInput: {
             backgroundColor: textInputBackgroundColor || "white",
@@ -38,7 +41,7 @@ const GoogleTextInput = ({
             borderRadius: 200,
           },
           listView: {
-            backgroundColor: textInputBackgroundColor || "white",
+            backgroundColor: textInputBackgroundColor || "transparent",
             position: "relative",
             top: 0,
             width: "100%",
@@ -60,16 +63,35 @@ const GoogleTextInput = ({
           key: googlePlacesApiKey,
           language: "en",
         }}
-        renderLeftButton={() => (
-          <Image
-            source={icon ? icon : icons.search}
-            className="w-6 h-6"
-            resizeMode="contain"
-          />
+        renderLeftButton={() =>
+          icon ? (
+            <Image source={icon || icons.search} className="w-6 h-6" resizeMode="contain" />
+          ) : (
+            <View className="flex flex-row gap-2 justify-start items-center">
+              <Image
+                source={icons.menu}
+                className="w-6 h-6"
+                resizeMode="contain"
+              />
+              <View className="h-2 w-2 rounded-full bg-primary-200" />
+            </View>
+          )
+        }
+        renderRightButton={() => (
+          <TouchableOpacity onPress={() => router.push("/(root)/favorites")}>
+            <Image
+              source={icons.heart}
+              resizeMode="contain"
+              className="h-5 w-5"
+            />
+          </TouchableOpacity>
         )}
         textInputProps={{
           placeholderTextColor: "gray",
-          placeholder: initialLocation ?? "Search Destination",
+          placeholder:
+            (initialLocation ?? purpose === "destination")
+              ? "Search Destination"
+              : "Your Current Location",
         }}
       />
     </View>
