@@ -9,7 +9,6 @@ import { useAuth } from "@clerk/clerk-expo";
 import ReactNativeModal from "react-native-modal";
 import { images } from "@/constants";
 import { router } from "expo-router";
-
 const Payment = ({
   fullName,
   email,
@@ -112,8 +111,9 @@ const Payment = ({
   return (
     <View>
       <CustomButton
-        title="Confirm Ride"
-        className="my-10"
+        title="Pay Online"
+        className="my-10 w-3/4"
+        
         onPress={openPaymentSheet}
       />
       <ReactNativeModal

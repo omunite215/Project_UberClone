@@ -4,9 +4,11 @@ import RideLayout from "@/components/RideLayout";
 import { icons } from "@/constants";
 import { formatTime } from "@/lib/utils";
 import { useDriverStore, useLocationStore } from "@/store";
+import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 
 import { StripeProvider } from "@stripe/stripe-react-native";
 import Payment from "@/components/Payment";
+import CustomButton from "@/components/CustomButton";
 
 const BookRide = () => {
   const { userAddress, destinationAddress } = useLocationStore();
@@ -31,11 +33,6 @@ const BookRide = () => {
           </Text>
 
           <View className="flex flex-col w-full items-center justify-center mt-10">
-            <Image
-              source={{ uri: driverDetails?.profile_image_url }}
-              className="w-28 h-28 rounded-full"
-            />
-
             <View className="flex flex-row items-center justify-center mt-5 space-x-2">
               <Text className="text-lg font-JakartaSemiBold">
                 {driverDetails?.title}
@@ -97,17 +94,22 @@ const BookRide = () => {
               </Text>
             </View>
           </View>
-          <Payment
-            // biome-ignore lint/style/noNonNullAssertion: API KEY
-            fullName={user?.fullName!}
-            // biome-ignore lint/style/noNonNullAssertion: API KEY
-            email={user?.emailAddresses[0].emailAddress!}
-            // biome-ignore lint/style/noNonNullAssertion: API KEY
-            amount={driverDetails?.price!}
-            driverId={driverDetails?.id}
-            // biome-ignore lint/style/noNonNullAssertion: API KEY
-            rideTime={driverDetails?.time!}
-          />
+          <View className="flex flex-col justify-center items-center">
+            <View className="flex flex-row justify-between items-center w-full">
+              <Payment
+                // biome-ignore lint/style/noNonNullAssertion: API KEY
+                fullName={user?.fullName!}
+                // biome-ignore lint/style/noNonNullAssertion: API KEY
+                email={user?.emailAddresses[0].emailAddress!}
+                // biome-ignore lint/style/noNonNullAssertion: API KEY
+                amount={driverDetails?.price!}
+                driverId={driverDetails?.id}
+                // biome-ignore lint/style/noNonNullAssertion: API KEY
+                rideTime={driverDetails?.time!}
+              />
+              <CustomButton title="Pay Cash" className="w-2/6" />
+            </View>
+          </View>
         </>
       </RideLayout>
     </StripeProvider>

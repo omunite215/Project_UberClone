@@ -56,7 +56,14 @@ const Map = () => {
         setDrivers(drivers as MarkerData[]);
       });
     }
-  }, [markers, destinationLatitude, destinationLongitude, userLongitude, userLatitude, setDrivers]);
+  }, [
+    markers,
+    destinationLatitude,
+    destinationLongitude,
+    userLongitude,
+    userLatitude,
+    setDrivers,
+  ]);
 
   if (loading || !userLatitude || !userLongitude) {
     return (
@@ -81,6 +88,7 @@ const Map = () => {
       className="w-full h-full rounded-2xl"
       mapType="mutedStandard"
       showsPointsOfInterest={false}
+      initialRegion={region}
       showsUserLocation={true}
       userInterfaceStyle="light"
     >

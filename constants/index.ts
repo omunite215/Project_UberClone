@@ -12,6 +12,8 @@ import eyecross from "@/assets/icons/eyecross.png";
 import google from "@/assets/icons/google.png";
 import heart from "@/assets/icons/heart.png";
 import home from "@/assets/icons/home.png";
+import history from"@/assets/icons/history.png";
+import info from "@/assets/icons/info.png";
 import list from "@/assets/icons/list.png";
 import lock from "@/assets/icons/lock.png";
 import map from "@/assets/icons/map.png";
@@ -24,10 +26,12 @@ import point from "@/assets/icons/point.png";
 import indiaFlag from "@/assets/icons/indiaFlag.png";
 import profile from "@/assets/icons/profile.png";
 import search from "@/assets/icons/search.png";
+import support from "@/assets/icons/support.png"
 import selectedMarker from "@/assets/icons/selected-marker.png";
 import star from "@/assets/icons/star.png";
 import target from "@/assets/icons/target.png";
 import to from "@/assets/icons/to.png";
+import wallet from "@/assets/icons/wallet.png";
 import check from "@/assets/images/check.png";
 import getStarted from "@/assets/images/get-started.png";
 import message from "@/assets/images/message.png";
@@ -63,7 +67,9 @@ export const icons = {
     google,
     heart,
     home,
+    history,
     indiaFlag,
+    info,
     list,
     lock,
     map,
@@ -79,6 +85,8 @@ export const icons = {
     star,
     target,
     to,
+    wallet,
+    support
 };
 
 export const onboarding = [

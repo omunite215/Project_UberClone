@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { useRef, type ReactNode } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 import Map from "./Map";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 

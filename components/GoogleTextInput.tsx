@@ -13,6 +13,7 @@ const GoogleTextInput = ({
   textInputBackgroundColor,
   handlePress,
   purpose,
+  placeholder
 }: GoogleInputProps) => {
   return (
     <View
@@ -34,7 +35,7 @@ const GoogleTextInput = ({
           },
           textInput: {
             backgroundColor: textInputBackgroundColor || "white",
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: "600",
             marginTop: 5,
             width: "100%",
@@ -67,7 +68,7 @@ const GoogleTextInput = ({
           icon ? (
             <Image source={icon || icons.search} className="w-6 h-6" resizeMode="contain" />
           ) : (
-            <View className="flex flex-row gap-2 justify-start items-center">
+            <View className="flex flex-row gap-3 justify-start items-center">
               <Image
                 source={icons.menu}
                 className="w-6 h-6"
@@ -82,16 +83,13 @@ const GoogleTextInput = ({
             <Image
               source={icons.heart}
               resizeMode="contain"
-              className="h-5 w-5"
+              className="h-4 w-4"
             />
           </TouchableOpacity>
         )}
         textInputProps={{
           placeholderTextColor: "gray",
-          placeholder:
-            (initialLocation ?? purpose === "destination")
-              ? "Search Destination"
-              : "Your Current Location",
+          placeholder: initialLocation || placeholder
         }}
       />
     </View>
