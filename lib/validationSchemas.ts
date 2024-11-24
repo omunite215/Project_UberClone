@@ -2,7 +2,11 @@ import { z } from "zod";
 
 export const SignUpFormSchema = z
   .object({
-    name: z
+    firstName: z
+      .string()
+      .min(3, "Required Min. 3 Characters")
+      .max(50, "Max 50 Characters"),
+    lastName: z
       .string()
       .min(3, "Required Min. 3 Characters")
       .max(50, "Max 50 Characters"),
@@ -27,7 +31,7 @@ export const SignUpFormSchema = z
     message: "You need to accept Terms, Conditions and Policies",
   });
 
-  export const SignUpFormDriverSchema = z
+export const SignUpFormDriverSchema = z
   .object({
     name: z
       .string()
@@ -54,9 +58,7 @@ export const SignUpFormSchema = z
     message: "You need to accept Terms, Conditions and Policies",
   });
 
-
 export const SignInFormSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8, "Required Min. 8 Characters"),
-})
-
+});

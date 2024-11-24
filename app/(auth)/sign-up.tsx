@@ -1,14 +1,5 @@
-import CustomButton from "@/components/CustomButton";
-import CustomFormField from "@/components/CustomFormField";
-import OTPInputField from "@/components/OTPInputField";
-import { icons, images } from "@/constants";
-import { fetchAPI } from "@/lib/fetch";
-import { SignUpFormSchema } from "@/lib/validationSchemas";
-import { useSignUp } from "@clerk/clerk-expo";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, router } from "expo-router";
+import type React from "react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import {
   Alert,
   Image,
@@ -19,99 +10,108 @@ import {
   Text,
   View,
 } from "react-native";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Link, router } from "expo-router";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import ReactNativeModal from "react-native-modal";
+import { useSignUp } from "@clerk/clerk-expo";
 import type { z } from "zod";
+import CustomButton from "@/components/CustomButton";
+import CustomFormField from "@/components/CustomFormField";
+import OTPInputField from "@/components/OTPInputField";
+import { fetchAPI } from "@/lib/fetch";
+import { SignUpFormSchema } from "@/lib/validationSchemas";
+import { icons, images } from "@/constants";
+import { signupFields } from "@/constants/arrayData";
+import AnimatedModal from "@/components/AnimatedModal";
 
-const SignUp = () => {
+type VerificationState = "default" | "pending" | "success" | "failed";
+
+const SignUp: React.FC = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [isChecked, setIsChecked] = useState(false);
   const [disableSubmit, setDisableSubmit] = useState(false);
+  const [verificationState, setVerificationState] =
+    useState<VerificationState>("default");
+  const [verificationCode, setVerificationCode] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
     setValue,
     getValues,
   } = useForm<z.infer<typeof SignUpFormSchema>>({
     resolver: zodResolver(SignUpFormSchema),
   });
 
-  const [verification, setVerification] = useState({
-    state: "default",
-    error: "",
-    code: "",
-  });
+  const handleSignUp = async (values: z.infer<typeof SignUpFormSchema>) => {
+    if (!isLoaded) return;
 
-  const onSignUpPress = async (values: z.infer<typeof SignUpFormSchema>) => {
-    console.log(values);
     setDisableSubmit(true);
-    if (!isLoaded) {
-      return;
-    }
-
     try {
       await signUp.create({
+        // firstName: values.firstName,
+        // lastName: values.lastName,
         emailAddress: values.email,
         password: values.password,
       });
-
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
 
-      setVerification({
-        ...verification,
-        state: "pending",
-      });
-      // biome-ignore lint/suspicious/noExplicitAny: No Error Types
+      setVerificationState("pending");
+      // biome-ignore lint/suspicious/noExplicitAny: ERROR STATE
     } catch (err: any) {
-      Alert.alert("Error: ", err.errors[0].longMessage);
+      Alert.alert("Error", err.errors?.[0]?.longMessage || "Sign-up failed");
+      reset();
+    } finally {
+      setDisableSubmit(false);
     }
   };
 
-  const onPressVerify = async () => {
-    if (!isLoaded) {
-      return;
-    }
+  const handleVerification = async () => {
+    if (!isLoaded) return;
+
     try {
-      const { name, email, adhaarCardNo, phone } = getValues();
+      const { firstName, lastName, email, adhaarCardNo, phone } = getValues();
       const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code: verification.code,
+        code: verificationCode,
       });
-      console.log(completeSignUp.status);
+
       if (completeSignUp.status === "complete") {
         await fetchAPI("/(api)/user", {
           method: "POST",
           body: JSON.stringify({
-            name: name,
+            firstName: firstName,
+            lastName: lastName,
             email: email,
             phone: `+91 ${phone}`,
             adhaarId: adhaarCardNo,
             clerkId: completeSignUp.createdUserId,
           }),
         });
-        await setActive({ session: completeSignUp.createdSessionId });
 
-        setVerification({
-          ...verification,
-          state: "success",
-        });
-        console.log("Step-1");
+        await setActive({ session: completeSignUp.createdSessionId });
+        setVerificationState("success");
+        setShowSuccessModal(true);
       } else {
-        setVerification({
-          ...verification,
-          error: "Verification Failed!!",
-          state: "failed",
-        });
+        setVerificationState("failed");
+        Alert.alert(
+          "Verification Failed",
+          "Please check the code and try again."
+        );
+        reset();
       }
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // biome-ignore lint/suspicious/noExplicitAny: ERROR STATE
     } catch (err: any) {
-      setVerification({
-        ...verification,
-        error: err?.errors[0]?.longMessage || "Oops!! An Error Occured!!",
-        state: "failed",
-      });
-      console.log("Step-3");
+      setVerificationState("failed");
+      Alert.alert(
+        "Error",
+        err.errors?.[0]?.longMessage || "Verification failed"
+      );
+      reset();
     }
   };
 
@@ -119,7 +119,6 @@ const SignUp = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       className="flex-1"
-      enabled
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
@@ -128,7 +127,7 @@ const SignUp = () => {
         <ImageBackground
           source={require("@/assets/images/signup-car.png")}
           resizeMode="cover"
-          className=" h-full w-full justify-center items-center opacity-80"
+          className="h-full w-full justify-center items-center opacity-80"
         >
           <View className="flex-1 bg-black/50 w-full px-5">
             <View className="relative w-full h-[130px]">
@@ -136,62 +135,29 @@ const SignUp = () => {
                 Create Your Account
               </Text>
             </View>
+
             <View className="py-5">
-              <CustomFormField
-                control={control}
-                errors={errors}
-                label="Name"
-                name="name"
-                placeholder="Enter your name"
-                icon={icons.person}
-              />
-              <CustomFormField
-                control={control}
-                errors={errors}
-                label="Email"
-                name="email"
-                placeholder="Enter your Email"
-                icon={icons.email}
-              />
-              <CustomFormField
-                control={control}
-                errors={errors}
-                label="Password"
-                name="password"
-                placeholder="Enter your Password"
-                icon={icons.lock}
-                secureTextEntry={true}
-              />
-              <CustomFormField
-                control={control}
-                errors={errors}
-                label="Phone"
-                name="phone"
-                placeholder="Enter your Phone Number"
-                icon={icons.indiaFlag}
-                prefixText="+91"
-              />
-              <CustomFormField
-                control={control}
-                errors={errors}
-                label="Adhaar Card Number"
-                name="adhaarCardNo"
-                placeholder="Enter your Adhaar Card Number"
-                icon={icons.adhaar}
-              />
-              <View className="flex flex-row items-center justify-start gap-x-6 my-2">
+              {signupFields.map(({ label, ...props }) => (
+                <CustomFormField
+                  key={props.name}
+                  control={control}
+                  errors={errors}
+                  label={label}
+                  {...props}
+                />
+              ))}
+
+              <View className="flex flex-row my-6">
                 <BouncyCheckbox
                   isChecked={isChecked}
-                  disableText
                   fillColor="#0ad1c8"
-                  useBuiltInState={false}
                   size={24}
                   onPress={() => {
                     setIsChecked(!isChecked);
                     setValue("acceptTerms", !isChecked);
                   }}
                 />
-                <Link href="/(root)/policies" className="pr-6">
+                <Link href="/(root)/policies" className="max-w-xs">
                   <Text className="text-white text-[15px]">
                     By Signing Up you agree to the&nbsp;
                   </Text>
@@ -200,10 +166,11 @@ const SignUp = () => {
                   </Text>
                 </Link>
               </View>
+
               <CustomButton
                 disabled={disableSubmit}
                 title="Sign Up"
-                onPress={handleSubmit(onSignUpPress)}
+                onPress={handleSubmit(handleSignUp)}
                 className="mt-6"
               />
 
@@ -215,42 +182,45 @@ const SignUp = () => {
                 <Text className=" text-primary-300">Log In</Text>
               </Link>
             </View>
-            <ReactNativeModal
-              isVisible={verification.state === "pending"}
-              onModalHide={() => {
-                if (verification.state === "success") setShowSuccessModal(true);
-              }}
-            >
+
+            {/* Verification Modal */}
+            <ReactNativeModal isVisible={verificationState === "pending"}>
               <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
                 <Text className="text-2xl font-JakartaExtraBold mb-2">
-                  Verfication
+                  Verification
                 </Text>
                 <Text className="font-Jakarta">
-                  We&apos;ve sent a verification code to {getValues("phone")}
+                  We've sent a verification code to {getValues("phone")}
                 </Text>
                 <OTPInputField
                   label="Code"
                   icon={icons.lock}
                   placeholder="XXXXX"
-                  value={verification.code}
+                  value={verificationCode}
                   keyboardType="numeric"
-                  onChangeText={(code) =>
-                    setVerification({ ...verification, code })
-                  }
+                  onChangeText={setVerificationCode}
                 />
-                {verification.error && (
-                  <Text className=" text-red-500 text-sm mt-1">
-                    {verification.error}
+                {verificationState === "failed" && (
+                  <Text className="text-red-500 text-sm mt-1">
+                    Verification Failed
                   </Text>
                 )}
                 <CustomButton
                   title="Verify Account"
-                  onPress={onPressVerify}
+                  onPress={handleVerification}
                   className="mt-5 bg-primary-200"
                 />
               </View>
             </ReactNativeModal>
-            <ReactNativeModal isVisible={showSuccessModal}>
+
+            {/* Success Modal */}
+            <ReactNativeModal
+              isVisible={showSuccessModal}
+              onModalHide={() => {
+                setShowSuccessModal(false);
+                router.replace("/(root)/(tabs)/home");
+              }}
+            >
               <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
                 <Image
                   source={images.check}
@@ -260,16 +230,8 @@ const SignUp = () => {
                   Success!!
                 </Text>
                 <Text className="text-base text-customBlack-100 font-Jakarta text-center mt-2">
-                  You have succesfully verfied your account.
+                  You have successfully verified your account.
                 </Text>
-                <CustomButton
-                  title="Browse Home"
-                  onPress={() => {
-                    setShowSuccessModal(false);
-                    router.push("/(root)/(tabs)/home");
-                  }}
-                  className="mt-5"
-                />
               </View>
             </ReactNativeModal>
           </View>

@@ -1,9 +1,10 @@
 import RideCard from "@/components/RideCard";
-import { images } from "@/constants";
+import { icons, images } from "@/constants";
 import { useFetch } from "@/lib/fetch";
 import type { Ride } from "@/types/type";
 import { useUser } from "@clerk/clerk-expo";
-import { ActivityIndicator, FlatList, Image, Text, View } from "react-native";
+import { router } from "expo-router";
+import { ActivityIndicator, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Rides = () => {
@@ -40,7 +41,16 @@ const Rides = () => {
         )}
         ListHeaderComponent={() => (
           <>
-            <Text className="text-2xl font-JakartaBold my-5">Recent Rides</Text>
+          <TouchableOpacity onPress={() => router.replace("/(root)/(tabs)/home")} className="mb-6">
+              <View className=" w-10 h-10 bg-white rounded-full items-center justify-center">
+                <Image
+                  source={icons.backArrow}
+                  resizeMode="contain"
+                  className="w-6 h-6"
+                />
+              </View>
+            </TouchableOpacity>
+            <Text className="text-2xl font-JakartaBold mb-5">Recent Rides</Text>
           </>
         )}
       />

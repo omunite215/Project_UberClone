@@ -63,12 +63,11 @@ const SignIn = () => {
       resizeMode="cover"
       className=" h-full w-full opacity-80"
     >
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1 bg-black/50"
-     
-    >
-      <ScrollView className="flex-1 h-full">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1 bg-black/50"
+      >
+        <ScrollView className="flex-1 h-full">
           <View className="flex-1 w-full px-5">
             <View className="relative w-full h-[130px]">
               <Text className="text-3xl text-white font-JakartaBold absolute bottom-0 my-6 left-0">
@@ -106,9 +105,9 @@ const SignIn = () => {
               <Text className=" text-primary-300">Sign Up</Text>
             </Link>
           </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
-        </ImageBackground>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </ImageBackground>
   );
 };
 

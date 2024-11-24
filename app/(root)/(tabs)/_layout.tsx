@@ -1,8 +1,9 @@
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Drawer } from "expo-router/drawer";
 import { useUser } from "@clerk/clerk-expo";
-import { View, Image, Text } from "react-native";
+import { Image, Text, TouchableOpacity } from "react-native";
 import { icons } from "@/constants";
+import { router } from "expo-router";
 
 export default function RootLayout() {
   const { user } = useUser();
@@ -14,10 +15,11 @@ export default function RootLayout() {
             headerShown: false,
             drawerType: "front",
             overlayColor: "rgba(0, 0, 0, 0.5)",
+            drawerInactiveTintColor: "white",
             drawerActiveTintColor: "white",
             drawerActiveBackgroundColor: "#0AD1C8",
             drawerStyle: {
-              backgroundColor: "#55f7f0",
+              backgroundColor: "teal",
             },
           }}
         >
@@ -25,7 +27,11 @@ export default function RootLayout() {
             name="profile"
             options={{
               drawerLabel: () => (
-                <View className="flex-1 items-start justify-center">
+                <TouchableOpacity
+                  onPress={() => router.push("/profile")}
+                  className="flex-1 items-start justify-center"
+                  activeOpacity={1}
+                >
                   <Image
                     source={{
                       uri:
@@ -36,13 +42,17 @@ export default function RootLayout() {
                     height={45}
                     className=" rounded-full"
                   />
-                  <Text className=" text-primary-400 font-JakartaBold text-xl my-6 uppercase w-full">
+                  <Text className=" text-white font-JakartaBold text-xl my-6 uppercase w-full">
                     {user?.fullName}
                   </Text>
-                  <Text>Sarthi Money Balance: 23</Text>
-                </View>
+                  <Text className="font-JakartaMedium mb-6 text-customWhite">
+                    Sarthi Money Balance: ₹ 23
+                  </Text>
+                </TouchableOpacity>
               ),
               title: "Profile",
+              drawerActiveBackgroundColor: "transparent",
+              swipeEnabled: false,
             }}
           />
           <Drawer.Screen
@@ -59,12 +69,13 @@ export default function RootLayout() {
           <Drawer.Screen
             name="wallet" // This is the name of the page and must match the url from root
             options={{
-              drawerLabel: "Wallet",
+              drawerLabel: "Sarthi Wallet",
               title: "overview",
               drawerIcon: () => (
                 <Image source={icons.wallet} alt="wallet" className="w-7 h-7" />
               ),
               drawerItemStyle: { marginTop: 16 },
+              swipeEnabled: false,
             }}
           />
           <Drawer.Screen
@@ -80,6 +91,7 @@ export default function RootLayout() {
                 />
               ),
               drawerItemStyle: { marginTop: 16 },
+              swipeEnabled: false,
             }}
           />
           <Drawer.Screen
@@ -95,6 +107,7 @@ export default function RootLayout() {
                 />
               ),
               drawerItemStyle: { marginTop: 16 },
+              swipeEnabled: false,
             }}
           />
           <Drawer.Screen
@@ -106,6 +119,7 @@ export default function RootLayout() {
                 <Image source={icons.info} alt="about" className="w-7 h-7" />
               ),
               drawerItemStyle: { marginTop: 16 },
+              swipeEnabled: false,
             }}
           />
         </Drawer>

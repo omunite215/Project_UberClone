@@ -2,7 +2,11 @@ import adhaar from "@/assets/icons/adhaar.png";
 import apple from "@/assets/icons/apple.png";
 import arrowDown from "@/assets/icons/arrow-down.png";
 import arrowUp from "@/assets/icons/arrow-up.png";
+import arrowRight from "@/assets/icons/arrowRight.png";
 import backArrow from "@/assets/icons/back-arrow.png";
+import car from "@/assets/icons/car.png";
+import card from "@/assets/icons/card.png";
+import call from "@/assets/icons/call.png";
 import chat from "@/assets/icons/chat.png";
 import checkmark from "@/assets/icons/check.png";
 import close from "@/assets/icons/close.png";
@@ -16,6 +20,7 @@ import history from"@/assets/icons/history.png";
 import info from "@/assets/icons/info.png";
 import list from "@/assets/icons/list.png";
 import lock from "@/assets/icons/lock.png";
+import logo from "@/assets/icons/logo.png";
 import map from "@/assets/icons/map.png";
 import marker from "@/assets/icons/marker.png";
 import menu from "@/assets/icons/menu.png";
@@ -31,6 +36,7 @@ import selectedMarker from "@/assets/icons/selected-marker.png";
 import star from "@/assets/icons/star.png";
 import target from "@/assets/icons/target.png";
 import to from "@/assets/icons/to.png";
+import upi from "@/assets/icons/upi.png";
 import wallet from "@/assets/icons/wallet.png";
 import check from "@/assets/images/check.png";
 import getStarted from "@/assets/images/get-started.png";
@@ -57,7 +63,11 @@ export const icons = {
     apple,
     arrowDown,
     arrowUp,
+    arrowRight,
     backArrow,
+    car,
+    card,
+    call,
     chat,
     checkmark,
     close,
@@ -72,6 +82,7 @@ export const icons = {
     info,
     list,
     lock,
+    logo,
     map,
     marker,
     menu,
@@ -85,6 +96,7 @@ export const icons = {
     star,
     target,
     to,
+    upi,
     wallet,
     support
 };

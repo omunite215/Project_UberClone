@@ -113,7 +113,7 @@ const Home = () => {
                       alt="No recent rides found"
                       resizeMode="contain"
                     />
-                    <Text className="text-sm">No recent rides found</Text>
+                    <Text className="text-sm text-customBlack-100">No recent rides found</Text>
                   </>
                 ) : (
                   <ActivityIndicator size="small" color="#0B6477" />
@@ -123,9 +123,7 @@ const Home = () => {
             ListHeaderComponent={() => (
               <>
                 <View className="bg-white shadow-md my-2 px-3 py-3 z-30 rounded-xl h-14 w-full flex flex-row justify-start items-center">
-                  <TouchableOpacity
-                    className="mx-2"
-                  >
+                  <TouchableOpacity className="mx-2">
                     <Image
                       source={icons.search}
                       resizeMode="contain"
