@@ -2,10 +2,14 @@ import { useUser } from "@clerk/clerk-expo";
 import { Image, ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import { useState } from "react";
 import InputField from "@/components/InputField";
 import { icons } from "@/constants";
+import CustomButton from "@/components/CustomButton";
+import ReactNativeModal from "react-native-modal";
 
 const Profile = () => {
+  const [showModal, setShowModal] = useState(false);
   const { user } = useUser();
 
   return (
@@ -50,7 +54,37 @@ const Profile = () => {
             <Text className=" font-JakartaMedium">Role : Rider</Text>
           </View>
         </View>
+        <TouchableOpacity
+          onPress={() => setShowModal(true)}
+          className="flex flex-row justify-start items-center gap-x-3 mt-6"
+        >
+          <Image source={icons.out} resizeMode="contain" className="w-7 h-7" />
+          <Text className=" text-danger-600 font-JakartaMedium text-base">
+            Logout
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
+      <ReactNativeModal isVisible={showModal}>
+        <View>
+          <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
+            <Text className="text-3xl font-JakartaBold">
+              Are you Sure ?
+            </Text>
+            <Text className="text-base text-customBlack-100 font-Jakarta mt-2">
+              This action can't be undone.
+            </Text>
+            <View className="pt-6 flex flex-row justify-end items-center gap-x-6">
+              <CustomButton
+                title="Cancel"
+                bgVariant="outline"
+                textVariant="primary"
+                className="w-24"
+              />
+              <CustomButton title="Logout" bgVariant="danger" className="w-24" />
+            </View>
+          </View>
+        </View>
+      </ReactNativeModal>
     </SafeAreaView>
   );
 };

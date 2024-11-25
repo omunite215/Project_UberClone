@@ -4,8 +4,6 @@ import RideLayout from "@/components/RideLayout";
 import { icons } from "@/constants";
 import { formatTime } from "@/lib/utils";
 import { useDriverStore, useLocationStore } from "@/store";
-import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-
 import { StripeProvider } from "@stripe/stripe-react-native";
 import Payment from "@/components/Payment";
 import CustomButton from "@/components/CustomButton";
