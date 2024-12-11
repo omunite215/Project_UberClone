@@ -6,7 +6,7 @@ import Map from "@/components/Map";
 import RideCard from "@/components/RideCard";
 import { icons, images } from "@/constants";
 import { useLocationStore } from "@/store";
-import { useAuth, useUser } from "@clerk/clerk-expo";
+import { useUser } from "@clerk/clerk-expo";
 import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -21,29 +21,18 @@ import { router } from "expo-router";
 import { useFetch } from "@/lib/fetch";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import type { Ride } from "@/types/type";
 
 const Home = () => {
   const navigation = useNavigation();
-  const { setUserLocation, setDestinationLocation } = useLocationStore();
+  const { setUserLocation } = useLocationStore();
   const { user } = useUser();
-  const { signOut } = useAuth();
-  const { data: recentRides, loading } = useFetch(`/(api)/ride/${user?.id}`);
+  const { data: recentRides, loading } = useFetch<Ride[]>(
+    `/(api)/ride/${user?.id}`
+  );
 
   const [hasPremissions, setHasPermissions] = useState(false);
   const bottomSheetRef = useRef<BottomSheet>(null);
-
-  const handleSignout = () => {
-    signOut();
-    router.replace("/(auth)/sign-in");
-  };
-  const handleDestinationPress = (location: {
-    latitude: number;
-    longitude: number;
-    address: string;
-  }) => {
-    // setDestinationLocation(location);
-    router.push("/(root)/find-ride");
-  };
 
   useEffect(() => {
     const requestLocation = async () => {
@@ -83,10 +72,10 @@ const Home = () => {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            className="w-full h-full flex flex-row space-x-2 justify-start items-center"
-            onPress={() => router.push("/(root)/find-ride")}
+            className="w-full h-full flex flex-row space-x-5 justify-start items-center"
+            onPress={() => router.push("/(user)/find-ride")}
           >
-            <View className="w-2 h-2 rounded-full bg-primary-200" />
+            <View className="w-2 h-2 ml-2 rounded-full bg-primary-200" />
             <Text className=" font-JakartaMedium">Your Current Location</Text>
           </TouchableOpacity>
         </View>
@@ -113,7 +102,9 @@ const Home = () => {
                       alt="No recent rides found"
                       resizeMode="contain"
                     />
-                    <Text className="text-sm text-customBlack-100">No recent rides found</Text>
+                    <Text className="text-sm text-customBlack-100">
+                      No recent rides found
+                    </Text>
                   </>
                 ) : (
                   <ActivityIndicator size="small" color="#0B6477" />
@@ -132,7 +123,7 @@ const Home = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     className="w-full h-full flex flex-row space-x-2 justify-start items-center"
-                    onPress={() => router.push("/(root)/find-ride")}
+                    onPress={() => router.push("/(user)/find-ride")}
                   >
                     <Text className=" font-JakartaMedium text-lg">
                       Your Destination

@@ -14,23 +14,51 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const sql = neon(`${process.env.DATABASE_URL}`);
-    const { name, email, phone, adhaarId, clerkId } = await request.json();
+    const {
+      firstName,
+      lastName,
+      email,
+      adhaarId,
+      drivingLicenseNo,
+      vehicleNo,
+      vehicleType,
+      phone,
+      clerkId,
+    } = await request.json();
 
-    if (!name || !email || !clerkId || !phone || !adhaarId) {
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !adhaarId ||
+      !drivingLicenseNo ||
+      !vehicleNo ||
+      !vehicleType ||
+      !phone ||
+      !clerkId
+    ) {
       Response.json({ error: "Missing Required Fields" }, { status: 400 });
     }
     const response = await sql`INSERT INTO drivers(
-    name,
+    first_name,
+    last_name,
     email,
     phone,
     adhaar_id,
+    driving_license_no,
+    vehicle_no,
+    vehicle_type,
     clerk_id
     )
     VALUES(
-    ${name},
+    ${firstName},
+    ${lastName},
     ${email},
     ${phone},
     ${adhaarId},
+    ${drivingLicenseNo},
+    ${vehicleNo},
+    ${vehicleType},
     ${clerkId}
     )
     `;

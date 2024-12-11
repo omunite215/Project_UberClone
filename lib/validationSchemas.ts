@@ -31,9 +31,13 @@ export const SignUpFormSchema = z
     message: "You need to accept Terms, Conditions and Policies",
   });
 
-export const SignUpFormDriverSchema = z
+export const DriverSignUpFormSchema = z
   .object({
-    name: z
+    firstName: z
+      .string()
+      .min(3, "Required Min. 3 Characters")
+      .max(50, "Max 50 Characters"),
+    lastName: z
       .string()
       .min(3, "Required Min. 3 Characters")
       .max(50, "Max 50 Characters"),
@@ -52,6 +56,11 @@ export const SignUpFormDriverSchema = z
       .refine((val) => /^\d+$/.test(val), {
         message: "Adhaar Card No. must contain only digits.",
       }),
+    drivingLicenseNo: z
+      .string().length(16, "Invalid Driving License Format"),
+    vehicleNo: z
+      .string(),
+    vehicleType: z.enum(['mini', 'sedan', 'hatchback', 'auto']),
     acceptTerms: z.boolean().default(false),
   })
   .refine((data) => data.acceptTerms, {

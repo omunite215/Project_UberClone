@@ -1,7 +1,6 @@
 import { icons } from "@/constants";
-import { Link } from "expo-router";
-import { Image, Text, View, TouchableOpacity } from "react-native";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const About = () => {
@@ -25,7 +24,7 @@ const About = () => {
           className="w-1/2 h-1/2"
         />
         <Text className="font-JakartaLight text-sm mt-24">Version 1.0.0</Text>
-        <Link href="/(root)/policies">
+        <Link href="/(user)/policies">
           <Text className="text-primary-400 font-JakartaMedium text-lg">
             Terms and Conditions
           </Text>

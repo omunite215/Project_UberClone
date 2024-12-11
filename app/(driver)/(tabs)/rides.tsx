@@ -4,7 +4,14 @@ import { useFetch } from "@/lib/fetch";
 import type { Ride } from "@/types/type";
 import { useUser } from "@clerk/clerk-expo";
 import { router } from "expo-router";
-import { ActivityIndicator, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Rides = () => {
@@ -35,13 +42,16 @@ const Rides = () => {
                 <Text className="text-sm">No recent rides found</Text>
               </>
             ) : (
-              <ActivityIndicator size="small" color="#00B39C" />
+              <ActivityIndicator size="small" color="#0AD1C8" />
             )}
           </View>
         )}
         ListHeaderComponent={() => (
           <>
-          <TouchableOpacity onPress={() => router.replace("/(root)/(tabs)/home")} className="mb-6">
+            <TouchableOpacity
+              onPress={() => router.replace("/(user)/(tabs)/home")}
+              className="mb-6"
+            >
               <View className=" w-10 h-10 bg-white rounded-full items-center justify-center">
                 <Image
                   source={icons.backArrow}

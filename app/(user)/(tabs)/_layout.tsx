@@ -1,12 +1,17 @@
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Drawer } from "expo-router/drawer";
-import { useUser } from "@clerk/clerk-expo";
-import { Image, Text, TouchableOpacity } from "react-native";
 import { icons } from "@/constants";
+import { useFetch } from "@/lib/fetch";
+import type { walletBalanceResponse } from "@/types/type";
+import { useUser } from "@clerk/clerk-expo";
 import { router } from "expo-router";
+import { Drawer } from "expo-router/drawer";
+import { ActivityIndicator, Image, Text, TouchableOpacity } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function RootLayout() {
   const { user } = useUser();
+  const { data: profileDetails, loading } = useFetch<walletBalanceResponse[]>(
+    `/(api)/user/${user?.id}?fields=wallet_balance`
+  );
   return (
     <>
       <GestureHandlerRootView>
@@ -42,12 +47,16 @@ export default function RootLayout() {
                     height={45}
                     className=" rounded-full"
                   />
-                  <Text className=" text-white font-JakartaBold text-xl my-6 uppercase w-full">
+                  <Text className=" text-white font-JakartaBold text-xl mt-6 uppercase w-full">
                     {user?.fullName}
                   </Text>
-                  <Text className="font-JakartaMedium mb-6 text-customWhite">
-                    Sarthi Money Balance: ₹ 23
-                  </Text>
+                  {!profileDetails || loading ? (
+                    <ActivityIndicator />
+                  ) : (
+                    <Text className="text-sm font-JakartaMedium text-white mt-2">
+                      Available Balance: ₹ {profileDetails[0]?.wallet_balance}
+                    </Text>
+                  )}
                 </TouchableOpacity>
               ),
               title: "Profile",

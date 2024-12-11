@@ -1,7 +1,7 @@
 import GeneralCard from "@/components/GeneralCard";
 import { icons } from "@/constants";
 import { router } from "expo-router";
-import { Text, TouchableOpacity, View, Image, ScrollView } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Support = () => {
@@ -9,9 +9,7 @@ const Support = () => {
     <SafeAreaView>
       <ScrollView>
         <View className="pb-12 pt-3 px-5 bg-primary-400">
-          <TouchableOpacity
-            onPress={() => router.replace("/home")}
-          >
+          <TouchableOpacity onPress={() => router.replace("/home")}>
             <View className=" w-10 h-10 bg-white rounded-full items-center justify-center">
               <Image
                 source={icons.backArrow}

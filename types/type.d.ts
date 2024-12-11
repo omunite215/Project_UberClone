@@ -1,5 +1,25 @@
 import type {TextInputProps, TouchableOpacityProps} from "react-native";
 
+declare interface UserProfileDetails {
+    adhaar_id: string;
+    clerk_id: string;
+    email: string;
+    first_name: string;
+    id: number;
+    last_name: string;
+    phone: string;
+    wallet_balance: string;
+  }
+
+declare interface walletBalanceResponse {
+    wallet_balance: string;
+}
+declare interface activeStatusResponse {
+    active_status: boolean;
+}
+
+
+
 declare interface Driver {
     driver_id: number;
     first_name: string;
@@ -52,6 +72,13 @@ declare interface Ride {
         car_seats: number;
     };
 }
+
+declare interface FareEstimate {
+    auto: number;
+    mini: number;
+    sedan: number;
+    hatchback: number;
+  }
 
 declare interface ButtonProps extends TouchableOpacityProps {
     title?: string;

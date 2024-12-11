@@ -1,4 +1,5 @@
-import type { Driver, MarkerData } from "@/types/type";
+import type { Driver, FareEstimate, MarkerData } from "@/types/type";
+import { rates } from "./rates";
 
 const directionsAPI = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
 
@@ -109,7 +110,7 @@ export const calculateDriverTimes = async ({
         dataToDestination.routes[0].legs[0].duration.value; // Time in seconds
 
       const totalTime = (timeToUser + timeToDestination) / 60; // Total time in minutes
-      
+
       const price = (totalTime * 0.5).toFixed(2); // Calculate price based on time
 
       return { ...marker, time: totalTime, price };
@@ -118,5 +119,48 @@ export const calculateDriverTimes = async ({
     return await Promise.all(timesPromises);
   } catch (error) {
     console.error("Error calculating driver times:", error);
+  }
+};
+
+export const calculateFares = async ({
+  userLatitude,
+  userLongitude,
+  destinationLatitude,
+  destinationLongitude,
+}: {
+  userLatitude: number | null;
+  userLongitude: number | null;
+  destinationLatitude: number | null;
+  destinationLongitude: number | null;
+}) => {
+  if (
+    !userLatitude ||
+    !userLongitude ||
+    !destinationLatitude ||
+    !destinationLongitude
+  )
+    return;
+
+  const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${userLatitude},${userLongitude}&destinations=${destinationLatitude},${destinationLongitude}&key=${apiKey}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.status === "OK") {
+      const distance = Number(data.rows[0].elements[0].distance.value); // Distance in meters
+      
+      const fareEstimate: FareEstimate = {
+        auto: rates.auto.baseFare + distance * rates.auto.costPerKm,
+        mini: rates.mini.baseFare + distance * rates.mini.costPerKm,
+        sedan: rates.sedan.baseFare + distance * rates.sedan.costPerKm,
+        hatchback: rates.hatchback.baseFare + distance * rates.hatchback.costPerKm,
+      };
+
+      return fareEstimate;
+    }
+    throw new Error("Distance Matrix API request failed");
+  } catch (error) {
+    console.error("Error fetching distance matrix:", error);
+    throw error;
   }
 };

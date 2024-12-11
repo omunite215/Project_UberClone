@@ -5,8 +5,8 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 const Policies = () => {
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="flex-1" edges={["top"]}>
-        <Text className="m-4 text-2xl font-JakartaBold text-primary-600">
+      <SafeAreaView className="flex-1 pb-20" edges={["top"]}>
+        <Text className="m-4 text-2xl font-JakartaBold text-primary-500">
           Terms and Policies*
         </Text>
         <SectionList

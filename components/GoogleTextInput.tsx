@@ -1,7 +1,7 @@
 import { icons } from "@/constants";
 import type { GoogleInputProps } from "@/types/type";
 import { router } from "expo-router";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 const googlePlacesApiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
@@ -13,7 +13,7 @@ const GoogleTextInput = ({
   textInputBackgroundColor,
   handlePress,
   purpose,
-  placeholder
+  placeholder,
 }: GoogleInputProps) => {
   return (
     <View
@@ -63,10 +63,15 @@ const GoogleTextInput = ({
         query={{
           key: googlePlacesApiKey,
           language: "en",
+          components: 'country:in',
         }}
         renderLeftButton={() =>
           icon ? (
-            <Image source={icon || icons.search} className="w-6 h-6" resizeMode="contain" />
+            <Image
+              source={icon || icons.search}
+              className="w-6 h-6"
+              resizeMode="contain"
+            />
           ) : (
             <View className="flex flex-row gap-3 justify-start items-center">
               <Image
@@ -89,7 +94,7 @@ const GoogleTextInput = ({
         )}
         textInputProps={{
           placeholderTextColor: "gray",
-          placeholder: initialLocation || placeholder
+          placeholder: initialLocation || placeholder,
         }}
       />
     </View>

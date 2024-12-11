@@ -9,6 +9,35 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { type Href, Link } from "expo-router";
+
+type AcceptTermsCheckboxProps = {
+  isChecked: boolean;
+  onPress: ((checked: boolean) => void) | undefined;
+  to: Href;
+};
+
+export const AcceptTermsCheckbox = ({isChecked, onPress, to} : AcceptTermsCheckboxProps) => {
+  return (
+    <View className="flex flex-row my-6">
+      <BouncyCheckbox
+        isChecked={isChecked}
+        fillColor="#0ad1c8"
+        size={24}
+        onPress={onPress}
+      />
+      <Link href={to} className="max-w-xs">
+        <Text className="text-white text-[15px]">
+          By Signing Up you agree to the&nbsp;
+        </Text>
+        <Text className="text-primary-300 text-[15px] font-JakartaSemiBold">
+          Privacy Policies and Terms & Conditions
+        </Text>
+      </Link>
+    </View>
+  );
+};
 
 const InputField = ({
   label,

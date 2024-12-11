@@ -1,18 +1,6 @@
-import CustomButton from "@/components/CustomButton";
-import CustomFormField from "@/components/CustomFormField";
-import OAuth from "@/components/OAuth";
-import OTPInputField from "@/components/OTPInputField";
-import { icons, images } from "@/constants";
-import { fetchAPI } from "@/lib/fetch";
-import { SignUpFormSchema } from "@/lib/validationSchemas";
-import { useSignUp } from "@clerk/clerk-expo";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, router } from "expo-router";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import {
   Alert,
-  Image,
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
@@ -20,94 +8,121 @@ import {
   Text,
   View,
 } from "react-native";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import ReactNativeModal from "react-native-modal";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Link, router } from "expo-router";
+import { useSignUp } from "@clerk/clerk-expo";
 import type { z } from "zod";
+import CustomButton from "@/components/CustomButton";
+import CustomFormField from "@/components/CustomFormField";
+import { fetchAPI } from "@/lib/fetch";
+import { DriverSignUpFormSchema } from "@/lib/validationSchemas";
+import { driverSignupFields, signupFields } from "@/constants/arrayData";
+import { AcceptTermsCheckbox } from "@/components/InputField";
+import { SuccessModal, VerificationModal } from "@/components/Modals";
+import CustomDropdown from "@/components/CustomDropdown";
 
-const DriverSignUp = () => {
+type VerificationState = "default" | "pending" | "success" | "failed";
+
+const DriverSignUp: React.FC = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [isChecked, setIsChecked] = useState(false);
+  const [verificationState, setVerificationState] =
+    useState<VerificationState>("default");
+  const [verificationCode, setVerificationCode] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
+    reset,
     setValue,
     getValues,
-  } = useForm<z.infer<typeof SignUpFormSchema>>({
-    resolver: zodResolver(SignUpFormSchema),
+  } = useForm<z.infer<typeof DriverSignUpFormSchema>>({
+    resolver: zodResolver(DriverSignUpFormSchema),
   });
 
-  const [verification, setVerification] = useState({
-    state: "default",
-    error: "",
-    code: "",
-  });
-
-  const onSignUpPress = async (values: z.infer<typeof SignUpFormSchema>) => {
-    const phone = `+91 ${values.phone}`;
-    if (!isLoaded) {
-      return;
-    }
-
+  const handleSignUp = async (
+    values: z.infer<typeof DriverSignUpFormSchema>
+  ): Promise<void> => {
+    console.log(values);
+    if (!isLoaded) return;
     try {
       await signUp.create({
         emailAddress: values.email,
         password: values.password,
-        phoneNumber: phone,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        unsafeMetadata: {
+          role: "driver"
+        }
       });
+      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
 
-      await signUp.preparePhoneNumberVerification();
-
-      setVerification({
-        ...verification,
-        state: "pending",
-      });
-      // biome-ignore lint/suspicious/noExplicitAny: No Error Types
+      setVerificationState("pending");
+      // biome-ignore lint/suspicious/noExplicitAny: ERROR STATE
     } catch (err: any) {
-      Alert.alert("Error: ", err.errors[0].longMessage);
+      Alert.alert("Error", err.errors?.[0]?.longMessage || "Sign-up failed");
+      reset();
     }
   };
 
-  const onPressVerify = async () => {
-    if (!isLoaded) {
-      return;
-    }
+  const handleVerification = async () => {
+    if (!isLoaded) return;
+
     try {
-      const completeSignUp = await signUp.attemptPhoneNumberVerification({
-        code: verification.code,
+      const {
+        firstName,
+        lastName,
+        email,
+        adhaarCardNo,
+        drivingLicenseNo,
+        vehicleNo,
+        vehicleType,
+        phone,
+      } = getValues();
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
+        code: verificationCode,
       });
-      const { name, email, adhaarCardNo, phone } = getValues();
+
       if (completeSignUp.status === "complete") {
-        await fetchAPI("/(api)/user", {
+        await fetchAPI("/(api)/driver", {
           method: "POST",
           body: JSON.stringify({
-            name: name,
+            firstName: firstName,
+            lastName: lastName,
             email: email,
-            phone: `+91 ${phone}`,
             adhaarId: adhaarCardNo,
+            drivingLicenseNo: drivingLicenseNo,
+            vehicleNo: vehicleNo,
+            vehicleType: vehicleType,
+            phone: `+91${phone}`,
             clerkId: completeSignUp.createdUserId,
           }),
         });
+
         await setActive({ session: completeSignUp.createdSessionId });
-        setVerification({
-          ...verification,
-          state: "success",
-        });
+        setVerificationState("success");
+        setShowSuccessModal(true);
+        router.replace("/(user)/(tabs)/home");
       } else {
-        setVerification({
-          ...verification,
-          error: "Verification Failed!!",
-          state: "failed",
-        });
+        setVerificationState("failed");
+        Alert.alert(
+          "Verification Failed",
+          "Please check the code and try again."
+        );
+        reset();
       }
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      setShowSuccessModal(false);
+      // biome-ignore lint/suspicious/noExplicitAny: ERROR STATE
     } catch (err: any) {
-      setVerification({
-        ...verification,
-        error: err?.errors[0]?.longMessage || "Oops!! An Error Occured!!",
-        state: "failed",
-      });
+      setVerificationState("failed");
+      Alert.alert(
+        "Error",
+        err.errors?.[0]?.longMessage || "Verification failed"
+      );
+      reset();
     }
   };
 
@@ -115,7 +130,6 @@ const DriverSignUp = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       className="flex-1"
-      enabled
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
@@ -124,84 +138,41 @@ const DriverSignUp = () => {
         <ImageBackground
           source={require("@/assets/images/signup-car.png")}
           resizeMode="cover"
-          className=" h-full w-full justify-center items-center opacity-80"
+          className="h-full w-full justify-center items-center opacity-80"
         >
           <View className="flex-1 bg-black/50 w-full px-5">
             <View className="relative w-full h-[130px]">
-              <Text className="text-2xl text-white font-JakartaSemiBold absolute bottom-0 mt-6 left-0">
+              <Text className="text-3xl text-white font-JakartaBold absolute bottom-0 mt-6 left-0">
                 Create Your Account
               </Text>
             </View>
             <View className="py-5">
-              <CustomFormField
-                control={control}
-                errors={errors}
-                label="Name"
-                name="name"
-                placeholder="Enter your name"
-                icon={icons.person}
-              />
-              <CustomFormField
-                control={control}
-                errors={errors}
-                label="Email"
-                name="email"
-                placeholder="Enter your Email"
-                icon={icons.email}
-              />
-              <CustomFormField
-                control={control}
-                errors={errors}
-                label="Password"
-                name="password"
-                placeholder="Enter your Password"
-                icon={icons.lock}
-                secureTextEntry={true}
-              />
-              <CustomFormField
-                control={control}
-                errors={errors}
-                label="Phone"
-                name="phone"
-                placeholder="Enter your Phone Number"
-                icon={icons.indiaFlag}
-                prefixText="+91"
-              />
-              <CustomFormField
-                control={control}
-                errors={errors}
-                label="Adhaar Card Number"
-                name="adhaarCardNo"
-                placeholder="Enter your Adhaar Card Number"
-                icon={icons.adhaar}
-              />
-              <View className="flex flex-row items-center justify-start gap-x-6 my-2">
-                <BouncyCheckbox
-                  isChecked={isChecked}
-                  disableText
-                  fillColor="#0ad1c8"
-                  useBuiltInState={false}
-                  size={24}
-                  onPress={() => {
-                    setIsChecked(!isChecked);
-                    setValue("acceptTerms", isChecked);
-                  }}
+              {driverSignupFields.map(({ label, ...props }) => (
+                <CustomFormField
+                  key={props.name}
+                  control={control}
+                  errors={errors}
+                  label={label}
+                  {...props}
                 />
-                <Link href="/(root)/policies" className="pr-6">
-                  <Text className="text-white text-[15px]">
-                    By Signing Up you agree to the&nbsp;
-                  </Text>
-                  <Text className="text-primary-300 text-[15px] font-JakartaSemiBold">
-                    Privacy Policies and Terms & Conditions
-                  </Text>
-                </Link>
-              </View>
+              ))}
+              <CustomDropdown
+                onChange={(item) => setValue("vehicleType", item.value)}
+              />
+              <AcceptTermsCheckbox
+                isChecked={isChecked}
+                onPress={() => {
+                  setIsChecked(!isChecked);
+                  setValue("acceptTerms", !isChecked);
+                }}
+                to="/(driver)/policies"
+              />
               <CustomButton
+                disabled={isSubmitting}
                 title="Sign Up"
-                onPress={handleSubmit(onSignUpPress)}
+                onPress={handleSubmit(handleSignUp)}
                 className="mt-6"
               />
-              <OAuth />
               <Link
                 href="/(auth)/sign-in"
                 className="text-lg text-center text-customBlack-100 my-10"
@@ -210,63 +181,19 @@ const DriverSignUp = () => {
                 <Text className=" text-primary-300">Log In</Text>
               </Link>
             </View>
-            <ReactNativeModal
-              isVisible={verification.state === "pending"}
-              onModalHide={() => {
-                if (verification.state === "success") setShowSuccessModal(true);
-              }}
-            >
-              <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
-                <Text className="text-2xl font-JakartaExtraBold mb-2">
-                  Verfication
-                </Text>
-                <Text className="font-Jakarta">
-                  We&apos;ve sent a verification code to {getValues("phone")}
-                </Text>
-                <OTPInputField
-                  label="Code"
-                  icon={icons.lock}
-                  placeholder="XXXXX"
-                  value={verification.code}
-                  keyboardType="numeric"
-                  onChangeText={(code) =>
-                    setVerification({ ...verification, code })
-                  }
-                />
-                {verification.error && (
-                  <Text className=" text-red-500 text-sm mt-1">
-                    {verification.error}
-                  </Text>
-                )}
-                <CustomButton
-                  title="Verify Account"
-                  onPress={onPressVerify}
-                  className="mt-5 bg-primary-200"
-                />
-              </View>
-            </ReactNativeModal>
-            <ReactNativeModal isVisible={showSuccessModal}>
-              <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
-                <Image
-                  source={images.check}
-                  className="w-[110px] h-[110px] mx-auto my-5"
-                />
-                <Text className="text-3xl font-JakartaBold text-center">
-                  Success!!
-                </Text>
-                <Text className="text-base text-customBlack-100 font-Jakarta text-center mt-2">
-                  You have succesfully verfied your account.
-                </Text>
-                <CustomButton
-                  title="Browse Home"
-                  onPress={() => {
-                    setShowSuccessModal(false);
-                    router.push("/(root)/(tabs)/home");
-                  }}
-                  className="mt-5"
-                />
-              </View>
-            </ReactNativeModal>
+            {/* Verification Modal */}
+            <VerificationModal
+              verificationState={verificationState}
+              setVerificationCode={setVerificationCode}
+              verificationCode={verificationCode}
+              onPress={handleVerification}
+              message={`We've sent a verification code to ${getValues("email")}`}
+            />
+            {/* Success Modal */}
+            <SuccessModal
+              isVisible={showSuccessModal}
+              message="Your account has been verified!!"
+            />
           </View>
         </ImageBackground>
       </ScrollView>

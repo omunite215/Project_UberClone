@@ -7,7 +7,7 @@ import type { PaymentProps } from "@/types/type";
 import { useLocationStore } from "@/store";
 import { useAuth } from "@clerk/clerk-expo";
 import ReactNativeModal from "react-native-modal";
-import { images } from "@/constants";
+import { icons, images } from "@/constants";
 import { router } from "expo-router";
 const Payment = ({
   fullName,
@@ -111,9 +111,17 @@ const Payment = ({
   return (
     <View>
       <CustomButton
-        title="Pay Online"
-        className="my-10 w-3/4"
-        
+        title="Credit / Debit Card"
+        className="my-4"
+        bgVariant="success"
+        textVariant="primary"
+        IconLeft={() => (
+          <Image
+            source={icons.card}
+            resizeMode="contain"
+            className="w-6 h-6 mr-2"
+          />
+        )}
         onPress={openPaymentSheet}
       />
       <ReactNativeModal

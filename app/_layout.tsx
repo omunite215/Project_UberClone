@@ -10,12 +10,10 @@ import { tokenCache } from "@/lib/auth";
 // biome-ignore lint/style/noNonNullAssertion: API KEY
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
-
-
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-LogBox.ignoreLogs(["Clerk:"])
+LogBox.ignoreLogs(["Clerk:"]);
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -50,7 +48,8 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="(root)" options={{ headerShown: false }} />
+          <Stack.Screen name="(user)" options={{ headerShown: false }} />
+          <Stack.Screen name="(driver)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
       </ClerkLoaded>
