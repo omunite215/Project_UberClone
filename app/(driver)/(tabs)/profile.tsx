@@ -1,7 +1,7 @@
 import CustomButton from "@/components/CustomButton";
 import { icons } from "@/constants";
 import { useFetch } from "@/lib/fetch";
-import type { UserProfileDetails } from "@/types/type";
+import type { DriverProfileDetails } from "@/types/type";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -19,8 +19,8 @@ const Profile = () => {
   const [showModal, setShowModal] = useState(false);
   const { user } = useUser();
   const { signOut } = useAuth();
-  const { data: profileDetails, loading } = useFetch<UserProfileDetails[]>(
-    `/(api)/user/${user?.id}`
+  const { data: profileDetails, loading } = useFetch<DriverProfileDetails[]>(
+    `/(api)/driver/${user?.id}`
   );
   const handleSignOut = () => {
     signOut();
@@ -66,6 +66,21 @@ const Profile = () => {
           <View className="py-4 px-3 rounded-lg bg-white mb-5">
             <Text className=" font-JakartaMedium">
               Adhaar Card :{profileDetails[0]?.adhaar_id}
+            </Text>
+          </View>
+          <View className="py-4 px-3 rounded-lg bg-white mb-5">
+            <Text className=" font-JakartaMedium">
+              Vehicle No :{profileDetails[0]?.vehicle_no}
+            </Text>
+          </View>
+          <View className="py-4 px-3 rounded-lg bg-white mb-5">
+            <Text className=" font-JakartaMedium">
+              Vehicle No :{profileDetails[0]?.vehicle_type}
+            </Text>
+          </View>
+          <View className="py-4 px-3 rounded-lg bg-white mb-5">
+            <Text className=" font-JakartaMedium">
+              Vehicle No :{profileDetails[0]?.drivingLicenseNo}
             </Text>
           </View>
           <View className="py-4 px-3 rounded-lg bg-white mb-5">

@@ -11,6 +11,20 @@ declare interface UserProfileDetails {
     wallet_balance: string;
   }
 
+declare interface DriverProfileDetails {
+    adhaar_id: string;
+    clerk_id: string;
+    email: string;
+    first_name: string;
+    id: number;
+    last_name: string;
+    phone: string;
+    wallet_balance: string;
+    vehicle_type: "mini" | "sedan" | "hatchback" | "auto";
+    vehicle_no: string;
+    drivingLicenseNo: string;
+  }
+
 declare interface walletBalanceResponse {
     wallet_balance: string;
 }

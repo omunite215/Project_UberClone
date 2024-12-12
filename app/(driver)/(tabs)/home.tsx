@@ -95,7 +95,7 @@ const Home = () => {
                 )}
               </Text>
             </View>
-            <ActiveStatusSwitch />
+            <ActiveStatusSwitch userId={user?.id!} />
           </TouchableOpacity>
         </View>
         <View className="absolute flex-1 flex flex-row items-center h-full w-full">
