@@ -95,6 +95,7 @@ const Home = () => {
                 )}
               </Text>
             </View>
+            {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
             <ActiveStatusSwitch userId={user?.id!} />
           </TouchableOpacity>
         </View>

@@ -1,23 +1,18 @@
 import { useFetch } from "@/lib/fetch";
-import { useUser } from "@clerk/clerk-expo";
 import React, { useState } from "react";
 import { View } from "react-native";
 import { Switch } from "react-native-gesture-handler";
 
-const ActiveStatusSwitch = ({userId} : {userId: string}) => {
+const ActiveStatusSwitch = ({ userId }: { userId: string }) => {
   const [isEnabled, setIsEnabled] = useState(false);
-  const { user } = useUser();
   const toggleSwitch = () => {
     setIsEnabled((previousState) => !previousState);
-    const { data: status, loading } = useFetch(
-      `/(api)/driver/${userId}`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          activeStatus: !isEnabled,
-        }),
-      }
-    );
+    const { data: status, loading } = useFetch(`/(api)/driver/${userId}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        active_status: !isEnabled,
+      }),
+    });
   };
 
   return (

@@ -53,43 +53,73 @@ export async function GET(request: Request, { id }: { id: string }) {
 
 export async function PATCH(request: Request, { id }: { id: string }) {
   try {
-    const { searchParams } = new URL(request.url);
-    const fields = searchParams.get("fields"); // Get the 'fields' query parameter
-
     if (!id) {
       return new Response(JSON.stringify({ error: "User ID is required" }), {
         status: 400,
       });
     }
 
-    // Determine selected fields: 'fields' or default to '*'
-    const selectedFields = fields
-      ? fields
-          .split(",")
-          .map((field) => field.trim())
-          .join(", ")
-      : "*";
+    const body = await request.json(); // Parse the request body
 
-    // SQL query dynamically adjusts based on 'fields'
+    if (!body || typeof body !== "object" || Object.keys(body).length !== 1) {
+      return new Response(
+        JSON.stringify({ error: "Request body must contain exactly one field to update" }),
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const [field, value] = Object.entries(body)[0]; // Get the field and value to update
+
+    // Validate the field against allowed fields (replace with actual field names from your table)
+    const allowedFields = [
+      "first_name",
+      "last_name",
+      "email",
+      "phone",
+      "adhaar_id",
+      "driving_license_no",
+      "vehicle_no",
+      "vehicle_type",
+      "wallet_balance",
+      "rating",
+      "active_status",
+    ];
+
+    if (!allowedFields.includes(field)) {
+      return new Response(
+        JSON.stringify({ error: `Field '${field}' is not allowed to be updated` }),
+        {
+          status: 400,
+        }
+      );
+    }
+
     const query = `
-      SELECT ${selectedFields}
-      FROM users
+      UPDATE users
+      SET ${field} = $2
       WHERE clerk_id = $1
+      RETURNING *;
     `;
 
-    const response = await sql(query, [id]);
+    const response = await sql(query, [id, value]);
 
-    return new Response(JSON.stringify({ data: response }), { status: 200 });
+    if (response.length === 0) {
+      return new Response(JSON.stringify({ error: "User not found" }), {
+        status: 404,
+      });
+    }
+
+    return new Response(JSON.stringify({ data: response[0] }), { status: 200 });
   } catch (error) {
-    // Check if error is an instance of Error
     if (error instanceof Error) {
-      console.error(error.message); // Log the error message
+      console.error(error.message);
       return new Response(JSON.stringify({ error: error.message }), {
         status: 500,
       });
     }
 
-    // For unexpected error types, log a generic message
     console.error("An unexpected error occurred", error);
     return new Response(
       JSON.stringify({ error: "An unexpected error occurred" }),
